@@ -1,6 +1,6 @@
 {
   "name": "thai-fencing-scoreboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Thai Fencing Competition Scoreboard",
   "main": "build/electron.js",
   "homepage": "./",
@@ -13,12 +13,17 @@
     "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-build": "yarn build && yarn copy-electron && electron-builder",
     "dist": "yarn build && yarn copy-electron && electron-builder --publish=never",
+    "dist-debug": "yarn build && yarn copy-electron && electron-builder --win --publish=never --config.compression=store --config.nsis.oneClick=false",
     "dist-all": "yarn build && yarn copy-electron && electron-builder --mac --win --linux --publish=never",
     "dist-win": "yarn build && yarn copy-electron && electron-builder --win --publish=never",
     "dist-mac": "yarn build && yarn copy-electron && electron-builder --mac --publish=never",
     "dist-portable": "yarn build && yarn copy-electron && electron-builder --win portable --mac dir --publish=never",
     "dist-win-portable": "yarn build && yarn copy-electron && electron-builder --win portable --publish=never",
-    "copy-electron": "cp electron.js build/ && cp preload.js build/"
+    "release": "yarn build && yarn copy-electron && electron-builder --publish=always",
+    "release-draft": "yarn build && yarn copy-electron && electron-builder --publish=onTagOrDraft",
+    "copy-electron": "cp electron.js build/ && cp preload.js build/",
+    "copy-electron-test": "cp electron-test.js build/electron.js && cp preload.js build/",
+    "dist-win-32": "yarn build && yarn copy-electron && electron-builder --win --ia32 --publish=never"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -26,7 +31,7 @@
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
-    "electron": "^27.0.0",
+    "electron": "^26.6.10",
     "electron-builder": "^24.6.4",
     "concurrently": "^8.2.2",
     "wait-on": "^7.0.1"
@@ -35,49 +40,36 @@
     "appId": "com.thaifencing.scoreboard",
     "productName": "Thai Fencing Scoreboard",
     "executableName": "ThaiFencingScoreboard",
-    "copyright": "Copyright © 2025 Thai Fencing Association",
-    "buildVersion": "1.0.0",
     "directories": {
       "output": "dist"
     },
     "files": [
       "build/**/*"
     ],
-    "extraResources": [
-      {
-        "from": "public/logo.jpg",
-        "to": "logo.jpg",
-        "filter": ["**/*"]
-      }
-    ],
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        },
-        {
-          "target": "portable",
-          "arch": ["x64"]
-        }
-      ],
-      "icon": "build/icon.ico",
-      "publisherName": "Thai Fencing Association",
-      "verifyUpdateCodeSignature": false,
-      "requestedExecutionLevel": "asInvoker"
+      "target": {
+        "target": "portable",
+        "arch": "x64"
+      }
     },
     "mac": {
-      "target": "dmg",
-      "icon": "build/icon.icns"
+      "target": "dmg"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "build/icon.png"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "target": "AppImage"
     }
+  },
+  "mac": {
+    "target": "dmg",
+    "icon": "build/icon.icns"
+  },
+  "linux": {
+    "target": "AppImage",
+    "icon": "build/icon.png"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true
   },
   "browserslist": {
     "production": [
