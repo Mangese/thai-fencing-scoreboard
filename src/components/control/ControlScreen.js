@@ -47,7 +47,7 @@ const ControlScreen = ({
 
   const globalControlsStyle = {
     gridRow: '3',
-    height: '120px'
+    minHeight: '120px'
   };
 
   const playerControlStyle = {

@@ -18,7 +18,7 @@ const GlobalControls = ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '0.5rem',
-    height: '100%'
+    gridAutoRows: 'minmax(70px, auto)'
   };
 
   const buttonStyle = {
@@ -73,7 +73,12 @@ const GlobalControls = ({
   };
 
   const labelStyle = {
-    fontSize: '0.9rem'
+    fontSize: '0.9rem',
+    textAlign: 'center',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '100%'
   };
 
   return (
@@ -145,7 +150,7 @@ const GlobalControls = ({
           }}
         >
           <div style={iconStyle}>⏰</div>
-          <div style={labelStyle}>EXTEND +1:00 MINUTE</div>
+          <div style={labelStyle}>EXTEND +1:00 MIN</div>
         </button>
       )}
 

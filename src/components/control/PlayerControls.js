@@ -29,10 +29,23 @@ const PlayerControls = ({
   };
 
   const buttonGroupStyle = {
-    display: 'flex',
-    flexDirection: 'column',
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    gridTemplateRows: '1fr auto',
     gap: '0.5rem',
     flex: 1
+  };
+
+  const pointRowStyle = {
+    display: 'flex',
+    gridRow: '1'
+  };
+
+  const warningsRowStyle = {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr',
+    gap: '0.5rem',
+    gridRow: '2'
   };
 
   const buttonStyle = {
@@ -108,94 +121,99 @@ const PlayerControls = ({
       </div>
 
       <div style={buttonGroupStyle}>
-        {/* Add Point Button */}
-        <button
-          style={pointButtonStyle}
-          onClick={() => handleButtonClick(() => onAddPoint(playerId))}
-          onMouseOver={(e) => {
-            if (!disabled) {
-              e.target.style.backgroundColor = '#218838';
-              e.target.style.transform = 'scale(1.02)';
-            }
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = '#28a745';
-            e.target.style.transform = 'scale(1)';
-          }}
-          disabled={disabled}
-        >
-          <div>+1 POINT</div>
-          <div style={countStyle}>🎯</div>
-        </button>
+        {/* Top Row - Add Point Button */}
+        <div style={pointRowStyle}>
+          <button
+            style={pointButtonStyle}
+            onClick={() => handleButtonClick(() => onAddPoint(playerId))}
+            onMouseOver={(e) => {
+              if (!disabled) {
+                e.target.style.backgroundColor = '#218838';
+                e.target.style.transform = 'scale(1.02)';
+              }
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#28a745';
+              e.target.style.transform = 'scale(1)';
+            }}
+            disabled={disabled}
+          >
+            <div>+1 POINT</div>
+            <div style={countStyle}>🎯</div>
+          </button>
+        </div>
 
-        {/* Out of Bounds Warning */}
-        <button
-          style={outWarningButtonStyle}
-          onClick={() => handleButtonClick(() => onAddWarning(playerId, WARNING_TYPES.OUT_OF_BOUNDS))}
-          onMouseOver={(e) => {
-            if (!disabled) {
-              e.target.style.backgroundColor = '#ff5252';
-              e.target.style.transform = 'scale(1.02)';
-            }
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = '#ff6b6b';
-            e.target.style.transform = 'scale(1)';
-          }}
-          disabled={disabled}
-        >
-          <div>OUT WARNING</div>
-          <div style={countStyle}>
-            {WARNING_DISPLAY[WARNING_TYPES.OUT_OF_BOUNDS].icon}
-            ({getWarningCount(WARNING_TYPES.OUT_OF_BOUNDS)})
-          </div>
-        </button>
+        {/* Bottom Row - Warning Buttons */}
+        <div style={warningsRowStyle}>
+          {/* Out of Bounds Warning */}
+          <button
+            style={outWarningButtonStyle}
+            onClick={() => handleButtonClick(() => onAddWarning(playerId, WARNING_TYPES.OUT_OF_BOUNDS))}
+            onMouseOver={(e) => {
+              if (!disabled) {
+                e.target.style.backgroundColor = '#ff5252';
+                e.target.style.transform = 'scale(1.02)';
+              }
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#ff6b6b';
+              e.target.style.transform = 'scale(1)';
+            }}
+            disabled={disabled}
+          >
+            <div>OUT</div>
+            <div style={countStyle}>
+              {WARNING_DISPLAY[WARNING_TYPES.OUT_OF_BOUNDS].icon}
+              ({getWarningCount(WARNING_TYPES.OUT_OF_BOUNDS)})
+            </div>
+          </button>
 
-        {/* Weapon Warning */}
-        <button
-          style={weaponWarningButtonStyle}
-          onClick={() => handleButtonClick(() => onAddWarning(playerId, WARNING_TYPES.WEAPON_NOT_IN_HAND))}
-          onMouseOver={(e) => {
-            if (!disabled) {
-              e.target.style.backgroundColor = '#ff7043';
-              e.target.style.transform = 'scale(1.02)';
-            }
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = '#ff8c42';
-            e.target.style.transform = 'scale(1)';
-          }}
-          disabled={disabled}
-        >
-          <div>WEAPON WARNING</div>
-          <div style={countStyle}>
-            {WARNING_DISPLAY[WARNING_TYPES.WEAPON_NOT_IN_HAND].icon}
-            ({getWarningCount(WARNING_TYPES.WEAPON_NOT_IN_HAND)})
-          </div>
-        </button>
+          {/* Weapon Warning */}
+          <button
+            style={weaponWarningButtonStyle}
+            onClick={() => handleButtonClick(() => onAddWarning(playerId, WARNING_TYPES.WEAPON_NOT_IN_HAND))}
+            onMouseOver={(e) => {
+              if (!disabled) {
+                e.target.style.backgroundColor = '#ff7043';
+                e.target.style.transform = 'scale(1.02)';
+              }
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#ff8c42';
+              e.target.style.transform = 'scale(1)';
+            }}
+            disabled={disabled}
+          >
+            <div>WEAPON</div>
+            <div style={countStyle}>
+              {WARNING_DISPLAY[WARNING_TYPES.WEAPON_NOT_IN_HAND].icon}
+              ({getWarningCount(WARNING_TYPES.WEAPON_NOT_IN_HAND)})
+            </div>
+          </button>
 
-        {/* General Warning */}
-        <button
-          style={generalWarningButtonStyle}
-          onClick={() => handleButtonClick(() => onAddWarning(playerId, WARNING_TYPES.GENERAL_WARNING))}
-          onMouseOver={(e) => {
-            if (!disabled) {
-              e.target.style.backgroundColor = '#7b1fa2';
-              e.target.style.transform = 'scale(1.02)';
-            }
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = '#9c27b0';
-            e.target.style.transform = 'scale(1)';
-          }}
-          disabled={disabled}
-        >
-          <div>GENERAL WARNING</div>
-          <div style={countStyle}>
-            {WARNING_DISPLAY[WARNING_TYPES.GENERAL_WARNING].icon}
-            ({getWarningCount(WARNING_TYPES.GENERAL_WARNING)})
-          </div>
-        </button>
+          {/* General Warning */}
+          <button
+            style={generalWarningButtonStyle}
+            onClick={() => handleButtonClick(() => onAddWarning(playerId, WARNING_TYPES.GENERAL_WARNING))}
+            onMouseOver={(e) => {
+              if (!disabled) {
+                e.target.style.backgroundColor = '#7b1fa2';
+                e.target.style.transform = 'scale(1.02)';
+              }
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#9c27b0';
+              e.target.style.transform = 'scale(1)';
+            }}
+            disabled={disabled}
+          >
+            <div>WARNING</div>
+            <div style={countStyle}>
+              {WARNING_DISPLAY[WARNING_TYPES.GENERAL_WARNING].icon}
+              ({getWarningCount(WARNING_TYPES.GENERAL_WARNING)})
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -34,6 +34,9 @@
   "build": {
     "appId": "com.thaifencing.scoreboard",
     "productName": "Thai Fencing Scoreboard",
+    "executableName": "ThaiFencingScoreboard",
+    "copyright": "Copyright © 2025 Thai Fencing Association",
+    "buildVersion": "1.0.0",
     "directories": {
       "output": "dist"
     },
@@ -58,7 +61,10 @@
           "arch": ["x64"]
         }
       ],
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "publisherName": "Thai Fencing Association",
+      "verifyUpdateCodeSignature": false,
+      "requestedExecutionLevel": "asInvoker"
     },
     "mac": {
       "target": "dmg",
