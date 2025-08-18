@@ -31,7 +31,7 @@ const Timer = ({
       return '#FFE6E6'; // Light red background when ended
     }
     if (timerState === TIMER_STATES.PAUSED) {
-      return '#FFF6E6'; // Light yellow background when paused
+      return 'transparent'; // Light yellow background when paused
     }
     return 'transparent';
   };

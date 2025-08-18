@@ -5,7 +5,10 @@ const WarningIcons = ({
                         warnings,
                         size = '2rem',
                         className = '',
-                        showCount = true
+                        showCount = true,
+                        // Add color props for more control
+                        activeColor = '#d9534f', // A nice red for active warnings
+                        inactiveColor = '#cccccc' // A light grey for inactive
                       }) => {
   const containerStyle = {
     display: 'flex',
@@ -20,52 +23,49 @@ const WarningIcons = ({
     alignItems: 'center',
     gap: '0.25rem',
     fontSize: size,
-    opacity: 0.7
+    color: inactiveColor // Use the inactive color
   };
 
   const activeWarningStyle = {
     ...warningStyle,
-    opacity: 1,
-    filter: 'drop-shadow(0 0 5px rgba(0,0,0,0.3))'
+    color: activeColor, // Use the active color
+    filter: 'drop-shadow(0 0 3px rgba(0,0,0,0.2))'
   };
 
+  // ... (countStyle remains the same)
   const countStyle = {
-    fontSize: size === '2rem' ? '1rem' : '0.8rem',
+    fontSize: '1rem',
     fontWeight: 'bold',
     color: '#333',
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    borderRadius: '50%',
-    width: '1.5em',
-    height: '1.5em',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: '1.5em'
+    // ... rest of countStyle
   };
 
   return (
-    <div className={`warning-icons ${className}`} style={containerStyle}>
-      {Object.entries(WARNING_TYPES).map(([key, warningType]) => {
-        const warningCount = warnings[warningType] || 0;
-        const config = WARNING_DISPLAY[warningType];
-        const isActive = warningCount > 0;
+      <div className={`warning-icons ${className}`} style={containerStyle}>
+        {Object.values(WARNING_TYPES).map((warningType) => {
+          const warningCount = warnings[warningType] || 0;
+          // Destructure the icon as a component
+          const { icon: IconComponent, label } = WARNING_DISPLAY[warningType];
+          const isActive = warningCount > 0;
 
-        return (
-          <div
-            key={warningType}
-            style={isActive ? activeWarningStyle : warningStyle}
-            title={`${config.label}: ${warningCount}`}
-          >
-            <span>{config.icon}</span>
-            {showCount && (
-              <span style={countStyle}>
+          return (
+              <div
+                  key={warningType}
+                  style={isActive ? activeWarningStyle : warningStyle}
+                  title={`${label}: ${warningCount}`}
+              >
+                {/* Render the icon as a component */}
+                <IconComponent />
+
+                {showCount && (
+                    <span style={countStyle}>
                 {warningCount}
               </span>
-            )}
-          </div>
-        );
-      })}
-    </div>
+                )}
+              </div>
+          );
+        })}
+      </div>
   );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 const PlayerName = ({
                       name,
-                      fontSize = '2rem',
+                      fontSize = '5rem',
                       className = '',
                       color = '#333',
                       textAlign = 'center'

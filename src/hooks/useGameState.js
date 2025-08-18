@@ -6,7 +6,8 @@ import {
   startTimer,
   pauseTimer,
   resetTimer,
-  extendTimer
+  extendTimer,
+  subtractPoint
 } from '../utils/gameLogic.js';
 import {
   saveGameState,
@@ -22,27 +23,27 @@ import { useAudio } from './useAudio.js';
 
 // Main game state management hook
 export const useGameState = () => {
-  console.log('🎮 useGameState: Hook called');
+  // console.log('🎮 useGameState: Hook called');
 
   const [gameState, setGameState] = useState(() => {
-    console.log('🎮 useGameState: Initializing state');
+    // console.log('🎮 useGameState: Initializing state');
     const saved = loadGameState();
     const initial = saved || createInitialGameState();
-    console.log('🎮 useGameState: Initial state:', initial);
+    // console.log('🎮 useGameState: Initial state:', initial);
     return initial;
   });
 
   const [playerNames, setPlayerNames] = useState(() => {
-    console.log('🎮 useGameState: Loading player names');
+    // console.log('🎮 useGameState: Loading player names');
     const names = loadPlayerNames();
-    console.log('🎮 useGameState: Player names:', names);
+    // console.log('🎮 useGameState: Player names:', names);
     return names;
   });
 
   const [teamLogos, setTeamLogos] = useState(() => {
-    console.log('🎮 useGameState: Loading team logos');
+    // console.log('🎮 useGameState: Loading team logos');
     const logos = loadTeamLogos();
-    console.log('🎮 useGameState: Team logos:', logos);
+    // console.log('🎮 useGameState: Team logos:', logos);
     return logos;
   });
 
@@ -50,26 +51,26 @@ export const useGameState = () => {
   const gameStateRef = useRef(gameState);
   gameStateRef.current = gameState;
 
-  console.log('🎮 useGameState: Current gameState:', gameState);
-  console.log('🎮 useGameState: Current playerNames:', playerNames);
-  console.log('🎮 useGameState: Current teamLogos:', teamLogos);
+  // console.log('🎮 useGameState: Current gameState:', gameState);
+  // console.log('🎮 useGameState: Current playerNames:', playerNames);
+  // console.log('🎮 useGameState: Current teamLogos:', teamLogos);
 
   const { playPointSound, playWarningSound, playMatchEndSound, playClickSound } = useAudio();
 
   // Set up IPC communication for Electron
   useEffect(() => {
     if (window.electronAPI && window.electronAPI.onGameStateUpdate) {
-      console.log('🎮 useGameState: Setting up IPC listener');
+      // console.log('🎮 useGameState: Setting up IPC listener');
 
       const handleGameStateUpdate = (newGameState) => {
-        console.log('🎮 useGameState: Received game state update:', newGameState);
+        // console.log('🎮 useGameState: Received game state update:', newGameState);
         setGameState(newGameState);
       };
 
       window.electronAPI.onGameStateUpdate(handleGameStateUpdate);
 
       return () => {
-        console.log('🎮 useGameState: Cleaning up IPC listener');
+        // console.log('🎮 useGameState: Cleaning up IPC listener');
         window.electronAPI.removeGameStateListener();
       };
     }
@@ -77,7 +78,7 @@ export const useGameState = () => {
 
   // Sync game state changes to other windows
   const syncGameState = useCallback((newState) => {
-    console.log('🎮 useGameState: Syncing game state:', newState);
+    // console.log('🎮 useGameState: Syncing game state:', newState);
     if (window.electronAPI && window.electronAPI.syncGameState) {
       window.electronAPI.syncGameState(newState);
     }
@@ -87,7 +88,7 @@ export const useGameState = () => {
   const setSyncedGameState = useCallback((updater) => {
     setGameState(prevState => {
       const newState = typeof updater === 'function' ? updater(prevState) : updater;
-      console.log('🎮 useGameState: Setting synced game state:', newState);
+      // console.log('🎮 useGameState: Setting synced game state:', newState);
 
       // Sync to other windows (with small delay to avoid race conditions)
       setTimeout(() => syncGameState(newState), 50);
@@ -123,10 +124,22 @@ export const useGameState = () => {
       const newState = addPoint(prevState, playerId);
 
       // Play sound effects
+      console.log('addPoint', playerId, playerId);
       playPointSound();
       if (newState.winner) {
         setTimeout(() => playMatchEndSound(), 500);
       }
+
+      return newState;
+    });
+  }, [setSyncedGameState, playPointSound, playMatchEndSound]);
+  const handleSubtractPoint = useCallback((playerId) => {
+    setSyncedGameState(prevState => {
+      const newState = subtractPoint(prevState, playerId);
+
+      console.log('subtractPoint', playerId, playerId);
+      // Play sound effects
+      playPointSound();
 
       return newState;
     });
@@ -240,6 +253,7 @@ export const useGameState = () => {
 
     // Player Actions
     handleAddPoint,
+    handleSubtractPoint,
     handleAddWarning,
 
     // Timer Actions

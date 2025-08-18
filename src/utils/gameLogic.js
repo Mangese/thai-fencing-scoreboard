@@ -38,6 +38,11 @@ export const createInitialGameState = () => ({
 // Add point to player
 export const addPoint = (gameState, playerId) => {
   const newState = { ...gameState };
+  if (newState.timer.state !== TIMER_STATES.PAUSED) {
+    console.log(newState.timer.state);
+    return newState
+  }
+
   newState.scores[playerId] += 1;
 
   // Reset all warnings when someone scores
@@ -57,6 +62,23 @@ export const addPoint = (gameState, playerId) => {
 
     addLogEntry('MATCH_WON', { winner: playerId });
   }
+
+  return newState;
+};
+
+// Subtract point to player
+export const subtractPoint = (gameState, playerId) => {
+  const newState = { ...gameState };
+  if (newState.scores[playerId] <= 0) {
+    return newState;
+  }
+
+  newState.scores[playerId] -= 1;
+  // Log the action
+  addLogEntry('POINT_DEDUCT', {
+    player: playerId,
+    newScore: newState.scores[playerId]
+  });
 
   return newState;
 };

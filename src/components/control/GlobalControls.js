@@ -18,13 +18,13 @@ const GlobalControls = ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '0.5rem',
-    gridAutoRows: 'minmax(70px, auto)'
+    gridAutoRows: 'minmax(4.3rem, auto)'
   };
 
   const buttonStyle = {
     padding: '0',
     border: 'none',
-    borderRadius: '8px',
+    borderRadius: '0.5rem',
     fontSize: '1.1rem',
     fontWeight: 'bold',
     cursor: 'pointer',
@@ -34,7 +34,7 @@ const GlobalControls = ({
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.25rem',
-    minHeight: '70px'
+    minHeight: '4.3rem'
   };
 
   const timerButtonStyle = {

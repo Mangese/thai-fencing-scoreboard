@@ -1,5 +1,5 @@
 import React from 'react';
-import { PLAYERS } from '../../utils/constants.js';
+import {PLAYERS, TIMER_STATES} from '../../utils/constants.js';
 import MatchSummary from './MatchSummary.js';
 import PlayerControls from './PlayerControls.js';
 import GlobalControls from './GlobalControls.js';
@@ -9,6 +9,7 @@ const ControlScreen = ({
                          setGameState,
                          getPlayerData,
                          handleAddPoint,
+                         handleSubtractPoint,
                          handleAddWarning,
                          handleStartTimer,
                          handlePauseTimer,
@@ -22,9 +23,11 @@ const ControlScreen = ({
 
   // Check if match is over
   const isMatchOver = gameState.winner !== null;
+  const isMatchRunning = gameState.timer.state !== TIMER_STATES.PAUSED;
 
+  console.log(isMatchOver, isMatchRunning)
   const containerStyle = {
-    height: '100vh',
+    'min-height': '100vh', // Change 'height' to 'min-height'
     backgroundColor: '#f8f9fa',
     display: 'grid',
     gridTemplateRows: 'auto 1fr auto',
@@ -47,20 +50,20 @@ const ControlScreen = ({
 
   const globalControlsStyle = {
     gridRow: '3',
-    minHeight: '120px'
+    minHeight: '7.5rem'
   };
 
   const playerControlStyle = {
     backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    borderRadius: '0.5rem',
+    boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.1)',
     padding: '1rem'
   };
 
   const globalControlsContainerStyle = {
     backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    borderRadius: '0.5rem',
+    boxShadow: '0 0.125rem 0.25rem rgba(0,0,0,0.1)',
     padding: '1rem'
   };
 
@@ -90,8 +93,9 @@ const ControlScreen = ({
             playerId={PLAYERS.PLAYER1}
             playerData={player1}
             onAddPoint={handleAddPoint}
+            onSubtractPoint={handleSubtractPoint}
             onAddWarning={handleAddWarning}
-            disabled={isMatchOver}
+            disabled={isMatchOver || isMatchRunning}
           />
         </div>
 
@@ -101,8 +105,9 @@ const ControlScreen = ({
             playerId={PLAYERS.PLAYER2}
             playerData={player2}
             onAddPoint={handleAddPoint}
+            onSubtractPoint={handleSubtractPoint}
             onAddWarning={handleAddWarning}
-            disabled={isMatchOver}
+            disabled={isMatchOver || isMatchRunning}
           />
         </div>
       </div>

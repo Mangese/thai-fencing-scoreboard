@@ -1,41 +1,43 @@
 import React from 'react';
 
 const CompetitionLogo = ({
-                           src = '/logo.jpg',
-                           alt = 'Competition Logo',
-                           maxWidth = '300px',
-                           className = ''
+                             src = '/logo.jpg',
+                             alt = 'Competition Logo',
+                             maxWidth = '100%',
+                             maxHeight = '100%', // Added this prop
+                             className = ''
                          }) => {
-  const logoStyle = {
-    maxWidth,
-    maxHeight: '200px',
-    width: 'auto',
-    height: 'auto',
-    objectFit: 'contain',
-    margin: '1rem auto',
-    display: 'block'
-  };
+    // The container div will fill the grid cell and apply the max-width/height
+    const containerStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        maxWidth,  // Apply size constraint from parent
+        maxHeight, // Apply size constraint from parent
+    };
 
-  const containerStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '1rem'
-  };
+    // The img tag will fill the container, but `objectFit` will prevent distortion
+    const logoStyle = {
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+    };
 
-  return (
-    <div className={`competition-logo-container ${className}`} style={containerStyle}>
-      <img
-        src={src}
-        alt={alt}
-        style={logoStyle}
-        onError={(e) => {
-          // Hide image if it fails to load
-          e.target.style.display = 'none';
-        }}
-      />
-    </div>
-  );
+    return (
+        <div className={`competition-logo-container ${className}`} style={containerStyle}>
+            <img
+                src={src}
+                alt={alt}
+                style={logoStyle}
+                onError={(e) => {
+                    // Hide image if it fails to load
+                    e.target.style.display = 'none';
+                }}
+            />
+        </div>
+    );
 };
 
 export default CompetitionLogo;

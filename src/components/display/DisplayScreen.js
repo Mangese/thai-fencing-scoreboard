@@ -7,183 +7,144 @@ import Timer from '../common/Timer.js';
 import WarningIcons from '../common/WarningIcons.js';
 import CompetitionLogo from './CompetitionLogo.js';
 
+// NOTE: This is a placeholder for the new small timer at the bottom.
+// You'll need to create this component and pass the correct data to it.
+const SpecialTimer = ({ timeLeft }) => {
+  const timerStyle = {
+    fontSize: 'clamp(2rem, 5vw, 3rem)',
+    color: '#333',
+    backgroundColor: '#fff',
+    border: '2px solid #ddd',
+    borderRadius: '0.5rem',
+    padding: '0.25rem 1.5rem',
+  };
+  // A simple formatter for the special timer
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+  return <div style={timerStyle}>{formatTime(timeLeft)}</div>;
+};
+
+
 const DisplayScreen = ({ gameState, getPlayerData }) => {
   const player1 = getPlayerData(PLAYERS.PLAYER1);
   const player2 = getPlayerData(PLAYERS.PLAYER2);
 
+  // Main container using CSS Grid
   const containerStyle = {
     height: '100vh',
     width: '100vw',
-    backgroundColor: '#f8f9fa',
-    display: 'flex',
-    flexDirection: 'column',
-    fontFamily: 'Arial, sans-serif'
-  };
-
-  const topSectionStyle = {
-    display: 'flex',
-    height: '25%',
-    alignItems: 'center'
-  };
-
-  const logoSectionStyle = {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '1rem'
-  };
-
-  const timerSectionStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '15%',
     backgroundColor: '#fff',
-    borderTop: '2px solid #ddd',
-    borderBottom: '2px solid #ddd'
+    display: 'grid',
+    // Defines 3 columns: side columns are 3 parts, center is 4 parts
+    gridTemplateColumns: '3fr 4fr 3fr',
+    // Defines 3 rows: top is 2 parts, middle (scores) is 3, bottom is 1
+    gridTemplateRows: '2fr 3fr 1fr',
+    fontFamily: '"Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: '1rem',
+    gap: '1rem',
   };
 
-  const namesSectionStyle = {
-    display: 'flex',
-    height: '10%',
-    alignItems: 'center',
-    backgroundColor: '#fff'
-  };
-
-  const nameAreaStyle = {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '0 2rem'
-  };
-
-  const centerLogoSectionStyle = {
-    height: '20%',
+  // A generic style to center content within any grid cell
+  const cellStyle = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff'
-  };
-
-  const scoresSectionStyle = {
-    display: 'flex',
-    height: '20%',
-    alignItems: 'center',
-    backgroundColor: '#fff'
-  };
-
-  const scoreAreaStyle = {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  };
-
-  const warningsSectionStyle = {
-    display: 'flex',
-    height: '10%',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-    borderTop: '1px solid #ddd'
-  };
-
-  const warningAreaStyle = {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '0 2rem'
+    flexDirection: 'column',
   };
 
   return (
-    <div style={containerStyle}>
-      {/* Top Section - Team Logos */}
-      <div style={topSectionStyle}>
-        <div style={logoSectionStyle}>
-          <TeamLogo
-            logoData={player1.logo}
-            size="150px"
-          />
-        </div>
-        <div style={logoSectionStyle}>
-          <TeamLogo
-            logoData={player2.logo}
-            size="150px"
-          />
-        </div>
-      </div>
-
-      {/* Timer Section */}
-      <div style={timerSectionStyle}>
-        <Timer
-          timeLeft={gameState.timer.timeLeft}
-          timerState={gameState.timer.state}
-          isExtended={gameState.timer.isExtended}
-          fontSize="5rem"
-        />
-      </div>
-
-      {/* Player Names Section */}
-      <div style={namesSectionStyle}>
-        <div style={nameAreaStyle}>
+      <div style={containerStyle}>
+        {/* -- TOP ROW -- */}
+        {/* Player 1 Section (Logo + Name) */}
+        <div style={cellStyle}>
+            <TeamLogo logoData={player1.logo} size="clamp(8rem, 8vh, 10rem)" />
           <PlayerName
-            name={player1.name}
-            fontSize="2.5rem"
-            color="#FF4444"
+              name={player1.name}
+              fontSize="clamp(4rem, 5vw, 6rem)"
+              color="#333"
           />
         </div>
-        <div style={nameAreaStyle}>
+
+        {/* Main Timer Section */}
+        <div style={cellStyle}>
+          <Timer
+              timeLeft={gameState.timer.timeLeft}
+              timerState={gameState.timer.state}
+              isExtended={gameState.timer.isExtended}
+              fontSize="clamp(6rem, 15vw, 10rem)"
+              color="#000000"
+          />
+        </div>
+
+        {/* Player 2 Section (Logo + Name) */}
+        <div style={cellStyle}>
+          <TeamLogo logoData={player2.logo} size="clamp(8rem, 8vh, 10rem)" />
           <PlayerName
-            name={player2.name}
-            fontSize="2.5rem"
-            color="#4444FF"
+              name={player2.name}
+              fontSize="clamp(4rem, 5vw, 6rem)"
+              color="#333"
           />
         </div>
-      </div>
 
-      {/* Competition Logo Section */}
-      <div style={centerLogoSectionStyle}>
-        <CompetitionLogo maxWidth="250px" />
-      </div>
-
-      {/* Scores Section */}
-      <div style={scoresSectionStyle}>
-        <div style={scoreAreaStyle}>
+        {/* -- MIDDLE ROW -- */}
+        {/* Player 1 Score */}
+        <div style={cellStyle}>
           <Score
-            score={player1.score}
-            playerId={PLAYERS.PLAYER1}
-            fontSize="14rem"
-            isWinner={gameState.winner === PLAYERS.PLAYER1}
+              score={player1.score}
+              playerId={PLAYERS.PLAYER1}
+              fontSize="clamp(12rem, 30vw, 22rem)"
+              isWinner={gameState.winner === PLAYERS.PLAYER1}
           />
         </div>
-        <div style={scoreAreaStyle}>
-          <Score
-            score={player2.score}
-            playerId={PLAYERS.PLAYER2}
-            fontSize="14rem"
-            isWinner={gameState.winner === PLAYERS.PLAYER2}
-          />
-        </div>
-      </div>
 
-      {/* Warnings Section */}
-      <div style={warningsSectionStyle}>
-        <div style={warningAreaStyle}>
-          <WarningIcons
-            warnings={player1.warnings}
-            size="2.5rem"
+        {/* Main Logo */}
+        <div style={cellStyle}>
+          <CompetitionLogo maxWidth="clamp(200px, 20vw, 350px)" />
+        </div>
+
+        {/* Player 2 Score */}
+        <div style={cellStyle}>
+          <Score
+              score={player2.score}
+              playerId={PLAYERS.PLAYER2}
+              fontSize="clamp(12rem, 30vw, 22rem)"
+              isWinner={gameState.winner === PLAYERS.PLAYER2}
           />
         </div>
-        <div style={warningAreaStyle}>
+
+        {/* -- BOTTOM ROW -- */}
+        {/* Player 1 Warnings */}
+        <div style={cellStyle}>
           <WarningIcons
-            warnings={player2.warnings}
-            size="2.5rem"
+              activeColor="#d9534f"
+              warnings={player1.warnings}
+              size="clamp(1.5rem, 4vw, 2.5rem)"
+          />
+        </div>
+
+        {/* Special Timer */}
+        <div style={cellStyle}>
+          {/*
+          NOTE: This is a placeholder. You need to provide the time
+          from your gameState, for example: gameState.specialTimer.timeLeft
+        */}
+          <SpecialTimer timeLeft={60} />
+        </div>
+
+        {/* Player 2 Warnings */}
+        <div style={cellStyle}>
+          <WarningIcons
+              activeColor="#1d00fe"
+              warnings={player2.warnings}
+              size="clamp(1.5rem, 4vw, 2.5rem)"
           />
         </div>
       </div>
-    </div>
   );
 };
 

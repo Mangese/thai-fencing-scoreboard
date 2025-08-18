@@ -119,7 +119,7 @@ const MatchSummary = ({ gameState, getPlayerData }) => {
           <div style={player1NameStyle}>{player1.name}</div>
           <div style={player1ScoreStyle}>{player1.score}</div>
           <div style={warningsLabelStyle}>Warnings:</div>
-          <WarningIcons warnings={player1.warnings} size="1.5rem" />
+          <WarningIcons activeColor="#d9534f" warnings={player1.warnings} size="1.5rem" />
         </div>
 
         {/* Timer */}
@@ -137,7 +137,7 @@ const MatchSummary = ({ gameState, getPlayerData }) => {
           <div style={player2NameStyle}>{player2.name}</div>
           <div style={player2ScoreStyle}>{player2.score}</div>
           <div style={warningsLabelStyle}>Warnings:</div>
-          <WarningIcons warnings={player2.warnings} size="1.5rem" />
+          <WarningIcons activeColor="#1d00fe" warnings={player2.warnings} size="1.5rem" />
         </div>
       </div>
 

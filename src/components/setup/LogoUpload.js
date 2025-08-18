@@ -114,7 +114,7 @@ const LogoUpload = ({
   return (
     <div className={`logo-upload ${className}`}>
       <div style={labelStyle}>
-        {playerName} Team Logo
+        ตราสังกัด
       </div>
 
       <div

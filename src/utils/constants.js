@@ -1,3 +1,5 @@
+import { FaExclamationTriangle, FaBell } from 'react-icons/fa';
+
 // Game Constants
 export const GAME_CONFIG = {
   WINNING_SCORE: 5,
@@ -17,17 +19,17 @@ export const WARNING_TYPES = {
 // Warning Display Config
 export const WARNING_DISPLAY = {
   [WARNING_TYPES.OUT_OF_BOUNDS]: {
-    icon: '⚠️',
+    icon: FaBell,
     color: 'red',
     label: 'Out of Bounds'
   },
   [WARNING_TYPES.WEAPON_NOT_IN_HAND]: {
-    icon: '⚔️',
+    icon: FaBell,
     color: 'orange',
     label: 'Weapon Warning'
   },
   [WARNING_TYPES.GENERAL_WARNING]: {
-    icon: '🔔',
+    icon: FaBell,
     color: 'purple',
     label: 'General Warning'
   }

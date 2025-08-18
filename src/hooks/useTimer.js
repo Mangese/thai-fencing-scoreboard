@@ -4,9 +4,9 @@ import { useAudio } from './useAudio.js';
 
 // Custom hook for timer management
 export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONTROL) => {
-  console.log('⏱️ useTimer: Hook called with gameState:', gameState);
-  console.log('⏱️ useTimer: setGameState type:', typeof setGameState);
-  console.log('⏱️ useTimer: windowType:', windowType);
+  // console.log('⏱️ useTimer: Hook called with gameState:', gameState);
+  // console.log('⏱️ useTimer: setGameState type:', typeof setGameState);
+  // console.log('⏱️ useTimer: windowType:', windowType);
 
   const intervalRef = useRef(null);
   const lastAlertTimeRef = useRef(null);
@@ -14,36 +14,36 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
 
   // Only run timer logic in Control window
   const shouldRunTimer = windowType === WINDOW_TYPES.CONTROL;
-  console.log('⏱️ useTimer: shouldRunTimer:', shouldRunTimer);
+  // console.log('⏱️ useTimer: shouldRunTimer:', shouldRunTimer);
 
   // Single effect that handles everything
   useEffect(() => {
-    console.log('⏱️ useTimer: Effect triggered');
-    console.log('⏱️ useTimer: gameState in effect:', gameState);
+    // console.log('⏱️ useTimer: Effect triggered');
+    // console.log('⏱️ useTimer: gameState in effect:', gameState);
 
     // Safety checks
     if (!gameState) {
-      console.error('⏱️ useTimer: gameState is undefined!');
+      // console.error('⏱️ useTimer: gameState is undefined!');
       return;
     }
     if (!gameState.timer) {
-      console.error('⏱️ useTimer: gameState.timer is undefined!');
+      // console.error('⏱️ useTimer: gameState.timer is undefined!');
       return;
     }
     if (!setGameState) {
-      console.error('⏱️ useTimer: setGameState is undefined!');
+      // console.error('⏱️ useTimer: setGameState is undefined!');
       return;
     }
     if (!shouldRunTimer) {
-      console.log('⏱️ useTimer: Skipping timer - not control window');
+      // console.log('⏱️ useTimer: Skipping timer - not control window');
       return;
     }
 
-    console.log('⏱️ useTimer: Timer state:', gameState.timer.state);
+    // console.log('⏱️ useTimer: Timer state:', gameState.timer.state);
 
     // Clear any existing interval first
     if (intervalRef.current) {
-      console.log('⏱️ useTimer: Clearing existing interval');
+      // console.log('⏱️ useTimer: Clearing existing interval');
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
@@ -101,16 +101,16 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
     };
   }, [gameState?.timer?.state, shouldRunTimer]); // Add shouldRunTimer to dependencies
 
-  console.log('⏱️ useTimer: Effect dependency gameState?.timer?.state:', gameState?.timer?.state);
+  // console.log('⏱️ useTimer: Effect dependency gameState?.timer?.state:', gameState?.timer?.state);
 
   // Handle audio alerts in separate effect
   useEffect(() => {
-    console.log('⏱️ useTimer: Audio effect triggered');
-    console.log('⏱️ useTimer: gameState for audio:', gameState);
+    // console.log('⏱️ useTimer: Audio effect triggered');
+    // console.log('⏱️ useTimer: gameState for audio:', gameState);
 
     // Safety checks
     if (!gameState || !gameState.timer || !shouldRunTimer) {
-      console.log('⏱️ useTimer: Skipping audio effect - no gameState.timer or not control window');
+      // console.log('⏱️ useTimer: Skipping audio effect - no gameState.timer or not control window');
       return;
     }
 
@@ -118,7 +118,7 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
     const timerState = gameState.timer.state;
     const isExtended = gameState.timer.isExtended;
 
-    console.log('⏱️ useTimer: Audio effect values:', { timeLeft, timerState, isExtended });
+    // console.log('⏱️ useTimer: Audio effect values:', { timeLeft, timerState, isExtended });
 
     // Play 1-minute alert (only for main timer, not extended)
     if (!isExtended &&
@@ -128,6 +128,7 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
 
       playOneMinuteAlert();
       lastAlertTimeRef.current = timeLeft;
+      gameState.timer.state = TIMER_STATES.PAUSED;
     }
 
     // Play time up alert
@@ -145,14 +146,14 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
     }
   }, [gameState?.timer?.timeLeft, gameState?.timer?.state, gameState?.timer?.isExtended, shouldRunTimer, playOneMinuteAlert, playTimeUpAlert]);
 
-  console.log('⏱️ useTimer: Audio effect dependencies:', {
-    timeLeft: gameState?.timer?.timeLeft,
-    state: gameState?.timer?.state,
-    isExtended: gameState?.timer?.isExtended,
-    shouldRunTimer,
-    playOneMinuteAlert: typeof playOneMinuteAlert,
-    playTimeUpAlert: typeof playTimeUpAlert
-  });
+  // console.log('⏱️ useTimer: Audio effect dependencies:', {
+  //   timeLeft: gameState?.timer?.timeLeft,
+  //   state: gameState?.timer?.state,
+  //   isExtended: gameState?.timer?.isExtended,
+  //   shouldRunTimer,
+  //   playOneMinuteAlert: typeof playOneMinuteAlert,
+  //   playTimeUpAlert: typeof playTimeUpAlert
+  // });
 
   // Check if extension button should be shown
   const shouldShowExtension = gameState.timer.timeLeft === 0 &&

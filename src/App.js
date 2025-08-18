@@ -31,7 +31,8 @@ function App() {
         } else {
           // Fallback: check URL params for development
           const urlParams = new URLSearchParams(window.location.search);
-          const urlType = urlParams.get('window') === 'display' ? WINDOW_TYPES.DISPLAY : WINDOW_TYPES.CONTROL;
+          // const urlType = urlParams.get('window') === 'display' ? WINDOW_TYPES.DISPLAY : WINDOW_TYPES.CONTROL;
+          const urlType = WINDOW_TYPES.DISPLAY;
           console.log('URL Window Type:', urlType);
           setWindowType(urlType);
         }

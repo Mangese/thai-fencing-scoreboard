@@ -5,6 +5,7 @@ const PlayerControls = ({
                           playerId,
                           playerData,
                           onAddPoint,
+                          onSubtractPoint,
                           onAddWarning,
                           disabled = false
                         }) => {
@@ -13,7 +14,7 @@ const PlayerControls = ({
   const containerStyle = {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    // height: '100%',
     gap: '0.5rem'
   };
 
@@ -24,7 +25,7 @@ const PlayerControls = ({
     color: isPlayer1 ? '#FF4444' : '#4444FF',
     padding: '1rem',
     backgroundColor: '#f8f9fa',
-    borderRadius: '8px',
+    borderRadius: '0.5rem',
     marginBottom: '0.5rem'
   };
 
@@ -38,8 +39,11 @@ const PlayerControls = ({
 
   const pointRowStyle = {
     display: 'flex',
-    gridRow: '1'
+    gridRow: '1',
+    gap: '0.5rem' // Add this to space out the buttons
   };
+
+
 
   const warningsRowStyle = {
     display: 'grid',
@@ -52,7 +56,7 @@ const PlayerControls = ({
     flex: 1,
     padding: '0',
     border: 'none',
-    borderRadius: '8px',
+    borderRadius: '0.5rem',
     fontSize: '1.2rem',
     fontWeight: 'bold',
     cursor: disabled ? 'not-allowed' : 'pointer',
@@ -63,21 +67,26 @@ const PlayerControls = ({
     justifyContent: 'center',
     gap: '0.5rem',
     opacity: disabled ? 0.5 : 1,
-    minHeight: '80px'
+    minHeight: '5rem'
   };
-
+  const subtractPointButtonStyle = { // Add this new style object
+    ...buttonStyle,
+    backgroundColor: '#dc3545',
+    color: 'white',
+    fontSize: 'clamp(1rem, 4vw, 1.4rem)'
+  };
   const pointButtonStyle = {
     ...buttonStyle,
     backgroundColor: '#28a745',
     color: 'white',
-    fontSize: '1.4rem'
+    fontSize: 'clamp(1rem, 4vw, 1.4rem)'
   };
 
   const warningButtonStyle = {
     ...buttonStyle,
     backgroundColor: '#ffc107',
     color: '#333',
-    fontSize: '1.1rem'
+    fontSize: 'clamp(1rem, 4vw, 1.4rem)'
   };
 
   const outWarningButtonStyle = {
@@ -97,7 +106,7 @@ const PlayerControls = ({
   };
 
   const countStyle = {
-    fontSize: '1rem',
+    fontSize: 'clamp(0.5rem, 4vw, 1rem)',
     opacity: 0.8
   };
 
@@ -115,7 +124,7 @@ const PlayerControls = ({
     <div style={containerStyle}>
       <div style={headerStyle}>
         {playerData.name}
-        <div style={{ fontSize: '1rem', marginTop: '0.5rem', opacity: 0.8 }}>
+        <div style={{ fontSize: 'clamp(0.5rem, 4vw, 1rem)' , marginTop: '0.5rem', opacity: 0.8 }}>
           Score: {playerData.score}
         </div>
       </div>
@@ -123,6 +132,19 @@ const PlayerControls = ({
       <div style={buttonGroupStyle}>
         {/* Top Row - Add Point Button */}
         <div style={pointRowStyle}>
+          <button
+              style={subtractPointButtonStyle}
+              onClick={() => handleButtonClick(() => onSubtractPoint(playerId))}
+              onMouseOver={(e) => {
+                if (!disabled) e.target.style.backgroundColor = '#c82333';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = '#dc3545';
+              }}
+              disabled={disabled || playerData.score === 0} // Also disable if score is 0
+          >
+            <div>-1 แต้ม</div>
+          </button>
           <button
             style={pointButtonStyle}
             onClick={() => handleButtonClick(() => onAddPoint(playerId))}
@@ -138,8 +160,7 @@ const PlayerControls = ({
             }}
             disabled={disabled}
           >
-            <div>+1 POINT</div>
-            <div style={countStyle}>🎯</div>
+            <div>+1 แต้ม</div>
           </button>
         </div>
 

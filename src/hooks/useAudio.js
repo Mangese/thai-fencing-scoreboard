@@ -1,10 +1,17 @@
 import { useCallback, useRef } from 'react';
-
+import oneMinuteAlertSound from '../assets/1min.mp3'; // Add this
+import timeUpAlertSound from '../assets/end_match.mp3';   // Add this
 // Custom hook for audio alerts
 export const useAudio = () => {
   console.log('🔊 useAudio: Hook called');
 
   const audioContextRef = useRef(null);
+
+  const playAudioFile = useCallback((audioFile, volume = 0.5) => {
+    const audio = new Audio(audioFile);
+    audio.volume = volume;
+    audio.play().catch(error => console.error("Error playing audio:", error));
+  }, []);
 
   // Initialize audio context
   const initAudioContext = useCallback(() => {
@@ -37,16 +44,13 @@ export const useAudio = () => {
 
   // Play 1-minute warning alert
   const playOneMinuteAlert = useCallback(() => {
-    // Play three beeps for 1-minute warning
-    createBeep(800, 300, 0.4);
-    setTimeout(() => createBeep(800, 300, 0.4), 400);
-    setTimeout(() => createBeep(800, 300, 0.4), 800);
+    playAudioFile(oneMinuteAlertSound, 1);
   }, [createBeep]);
 
   // Play time up alert
   const playTimeUpAlert = useCallback(() => {
     // Play long beep for time up
-    createBeep(600, 1000, 0.5);
+    playAudioFile(timeUpAlertSound, 1);
   }, [createBeep]);
 
   // Play button click sound
@@ -70,9 +74,7 @@ export const useAudio = () => {
   // Play match end sound
   const playMatchEndSound = useCallback(() => {
     // Play victory fanfare
-    createBeep(600, 200, 0.4);
-    setTimeout(() => createBeep(800, 200, 0.4), 200);
-    setTimeout(() => createBeep(1000, 400, 0.4), 400);
+    playAudioFile(timeUpAlertSound, 1);
   }, [createBeep]);
 
   return {

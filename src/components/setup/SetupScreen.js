@@ -34,17 +34,17 @@ const SetupScreen = ({
   };
 
   const containerStyle = {
-    height: '100vh',
+    // height: '100vh',
     backgroundColor: '#f8f9fa',
     display: 'flex',
     flexDirection: 'column',
-    padding: '2rem',
+    // padding: '5rem',
     fontFamily: 'Arial, sans-serif'
   };
 
   const headerStyle = {
     textAlign: 'center',
-    marginBottom: '3rem'
+    marginBottom: '2rem'
   };
 
   const titleStyle = {
@@ -116,7 +116,7 @@ const SetupScreen = ({
     border: 'none',
     borderRadius: '10px',
     cursor: 'pointer',
-    marginTop: '2rem',
+    marginBottom: '2rem',
     transition: 'all 0.3s ease',
     boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
   };
@@ -152,19 +152,31 @@ const SetupScreen = ({
         <h1 style={titleStyle}>Thai Fencing Scoreboard</h1>
         <p style={subtitleStyle}>Setup Match - Enter Player Information</p>
       </div>
-
+      <button
+          style={startButtonStyle}
+          onClick={handleStartMatch}
+          onMouseOver={(e) => Object.assign(e.target.style, startButtonHoverStyle)}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor = '#28a745';
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+          }}
+          disabled={!localNames.player1.trim() || !localNames.player2.trim()}
+      >
+        Start Match
+      </button>
       <div style={contentStyle}>
         {/* Player 1 Setup */}
         <div style={playerSectionStyle}>
-          <h2 style={player1HeaderStyle}>Player 1</h2>
+          <h2 style={player1HeaderStyle}>ฝ่ายแดง</h2>
 
           <div style={inputGroupStyle}>
-            <label style={labelStyle}>Player Name</label>
+            <label style={labelStyle}>ชื่อนักกีฬา</label>
             <input
               type="text"
               value={localNames.player1}
               onChange={(e) => handleNameChange(PLAYERS.PLAYER1, e.target.value)}
-              placeholder="Enter player 1 name..."
+              placeholder="ชื่อนักกีฬา..."
               style={inputStyle}
               onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
               onBlur={(e) => e.target.style.borderColor = '#ddd'}
@@ -175,21 +187,20 @@ const SetupScreen = ({
           <LogoUpload
             logoData={teamLogos.player1}
             onLogoChange={(logoData) => updateTeamLogo(PLAYERS.PLAYER1, logoData)}
-            playerName={localNames.player1 || 'Player 1'}
           />
         </div>
 
         {/* Player 2 Setup */}
         <div style={playerSectionStyle}>
-          <h2 style={player2HeaderStyle}>Player 2</h2>
+          <h2 style={player2HeaderStyle}>ฝ่ายน้ำเงิน</h2>
 
           <div style={inputGroupStyle}>
-            <label style={labelStyle}>Player Name</label>
+            <label style={labelStyle}>ชื่อนักกีฬา</label>
             <input
               type="text"
               value={localNames.player2}
               onChange={(e) => handleNameChange(PLAYERS.PLAYER2, e.target.value)}
-              placeholder="Enter player 2 name..."
+              placeholder="ชื่อนักกีฬา..."
               style={inputStyle}
               onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
               onBlur={(e) => e.target.style.borderColor = '#ddd'}
@@ -200,24 +211,9 @@ const SetupScreen = ({
           <LogoUpload
             logoData={teamLogos.player2}
             onLogoChange={(logoData) => updateTeamLogo(PLAYERS.PLAYER2, logoData)}
-            playerName={localNames.player2 || 'Player 2'}
           />
         </div>
       </div>
-
-      <button
-        style={startButtonStyle}
-        onClick={handleStartMatch}
-        onMouseOver={(e) => Object.assign(e.target.style, startButtonHoverStyle)}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = '#28a745';
-          e.target.style.transform = 'translateY(0)';
-          e.target.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-        }}
-        disabled={!localNames.player1.trim() || !localNames.player2.trim()}
-      >
-        Start Match
-      </button>
     </div>
   );
 };

@@ -2,7 +2,7 @@
   "name": "thai-fencing-scoreboard",
   "version": "1.0.1",
   "description": "Thai Fencing Competition Scoreboard",
-  "main": "build/electron.js",
+  "main": "electron.js",
   "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
@@ -28,12 +28,13 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "electron": "^26.6.10",
     "electron-builder": "^24.6.4",
-    "concurrently": "^8.2.2",
     "wait-on": "^7.0.1"
   },
   "build": {
