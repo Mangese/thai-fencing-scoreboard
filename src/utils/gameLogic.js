@@ -8,6 +8,14 @@ import { addLogEntry } from './storage.js';
 
 // Initialize empty game state
 export const createInitialGameState = () => ({
+  name: {
+    [PLAYERS.PLAYER1]: 'ฝ่ายแดง',
+    [PLAYERS.PLAYER2]: 'ฝ่ายน้ำเงิน'
+  },
+  logo: {
+    [PLAYERS.PLAYER1]: '',
+    [PLAYERS.PLAYER2]: ''
+  },
   scores: {
     [PLAYERS.PLAYER1]: 0,
     [PLAYERS.PLAYER2]: 0

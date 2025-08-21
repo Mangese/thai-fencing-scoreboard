@@ -1,4 +1,7 @@
 import { FaExclamationTriangle, FaBell } from 'react-icons/fa';
+import { PiSwordLight } from "react-icons/pi";
+import { VscCircleLarge } from "react-icons/vsc";
+import { ImCross } from "react-icons/im";
 
 // Game Constants
 export const GAME_CONFIG = {
@@ -19,17 +22,17 @@ export const WARNING_TYPES = {
 // Warning Display Config
 export const WARNING_DISPLAY = {
   [WARNING_TYPES.OUT_OF_BOUNDS]: {
-    icon: FaBell,
+    icon: VscCircleLarge,
     color: 'red',
     label: 'Out of Bounds'
   },
   [WARNING_TYPES.WEAPON_NOT_IN_HAND]: {
-    icon: FaBell,
+    icon: PiSwordLight,
     color: 'orange',
     label: 'Weapon Warning'
   },
   [WARNING_TYPES.GENERAL_WARNING]: {
-    icon: FaBell,
+    icon: ImCross,
     color: 'purple',
     label: 'General Warning'
   }

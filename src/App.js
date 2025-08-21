@@ -10,6 +10,7 @@ import SetupScreen from './components/setup/SetupScreen.js';
 import ControlScreen from './components/control/ControlScreen.js';
 import SummaryScreen from './components/summary/SummaryScreen.js';
 import LogsScreen from './components/logs/LogsScreen.js';
+import {clearAllGameData} from "./utils/storage";
 
 function App() {
   const gameStateHook = useGameState();
@@ -17,7 +18,6 @@ function App() {
 
   // Determine window type from URL or electron process
   const [windowType, setWindowType] = useState(WINDOW_TYPES.DISPLAY);
-
   // Get window type on mount
   useEffect(() => {
     const determineWindowType = () => {

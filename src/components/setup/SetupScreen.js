@@ -30,7 +30,7 @@ const SetupScreen = ({
       return;
     }
 
-    startNewMatch();
+    startNewMatch(localNames.player1, teamLogos.player1, localNames.player2, teamLogos.player2);
   };
 
   const containerStyle = {

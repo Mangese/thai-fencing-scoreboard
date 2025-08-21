@@ -3,16 +3,16 @@ import { WARNING_TYPES, WARNING_DISPLAY } from '../../utils/constants.js';
 
 const WarningIcons = ({
                         warnings,
-                        size = '2rem',
+                        size = '5rem',
                         className = '',
                         showCount = true,
                         // Add color props for more control
                         activeColor = '#d9534f', // A nice red for active warnings
-                        inactiveColor = '#cccccc' // A light grey for inactive
+                        inactiveColor = 'transparent' // A light grey for inactive
                       }) => {
   const containerStyle = {
     display: 'flex',
-    gap: '0.5rem',
+    gap: '3rem',
     alignItems: 'center',
     justifyContent: 'center',
     flexWrap: 'wrap'
@@ -21,7 +21,7 @@ const WarningIcons = ({
   const warningStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: '0.25rem',
+    gap: '1rem',
     fontSize: size,
     color: inactiveColor // Use the inactive color
   };
@@ -35,8 +35,8 @@ const WarningIcons = ({
   // ... (countStyle remains the same)
   const countStyle = {
     fontSize: '1rem',
-    fontWeight: 'bold',
-    color: '#333',
+    // fontWeight: 'bold',
+    color: 'transparent',
     // ... rest of countStyle
   };
 
@@ -56,12 +56,6 @@ const WarningIcons = ({
               >
                 {/* Render the icon as a component */}
                 <IconComponent />
-
-                {showCount && (
-                    <span style={countStyle}>
-                {warningCount}
-              </span>
-                )}
               </div>
           );
         })}

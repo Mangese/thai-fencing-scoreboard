@@ -1,6 +1,6 @@
 {
   "name": "thai-fencing-scoreboard",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Thai Fencing Competition Scoreboard",
   "main": "electron.js",
   "homepage": "./",

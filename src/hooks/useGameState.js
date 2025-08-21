@@ -211,10 +211,14 @@ export const useGameState = () => {
   }, []);
 
   // Game Management
-  const startNewMatch = useCallback(() => {
+  const startNewMatch = useCallback((player1Name, player1Logo, player2Name, player2Logo) => {
     const initialState = createInitialGameState();
     initialState.currentScreen = SCREEN_TYPES.GAME;
     initialState.matchStartTime = new Date().toISOString();
+    initialState.name[PLAYERS.PLAYER1] = player1Name;
+    initialState.name[PLAYERS.PLAYER2] = player2Name;
+    initialState.logo[PLAYERS.PLAYER1] = player1Logo;
+    initialState.logo[PLAYERS.PLAYER2] = player2Logo;
     setSyncedGameState(initialState);
     playClickSound();
   }, [setSyncedGameState, playClickSound]);

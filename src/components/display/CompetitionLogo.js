@@ -1,7 +1,8 @@
 import React from 'react';
+import logoFromFile from '../../assets/logo.jpg';
 
 const CompetitionLogo = ({
-                             src = '/logo.jpg',
+                             src = logoFromFile,
                              alt = 'Competition Logo',
                              maxWidth = '100%',
                              maxHeight = '100%', // Added this prop

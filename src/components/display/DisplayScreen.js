@@ -62,9 +62,9 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
         {/* -- TOP ROW -- */}
         {/* Player 1 Section (Logo + Name) */}
         <div style={cellStyle}>
-            <TeamLogo logoData={player1.logo} size="clamp(8rem, 8vh, 10rem)" />
+            <TeamLogo logoData={gameState.logo[PLAYERS.PLAYER1]} size="clamp(8rem, 8vh, 10rem)" />
           <PlayerName
-              name={player1.name}
+              name={gameState.name[PLAYERS.PLAYER1]}
               fontSize="clamp(4rem, 5vw, 6rem)"
               color="#333"
           />
@@ -83,9 +83,9 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
 
         {/* Player 2 Section (Logo + Name) */}
         <div style={cellStyle}>
-          <TeamLogo logoData={player2.logo} size="clamp(8rem, 8vh, 10rem)" />
+          <TeamLogo logoData={gameState.logo[PLAYERS.PLAYER2]} size="clamp(8rem, 8vh, 10rem)" />
           <PlayerName
-              name={player2.name}
+              name={gameState.name[PLAYERS.PLAYER2]}
               fontSize="clamp(4rem, 5vw, 6rem)"
               color="#333"
           />
@@ -123,7 +123,7 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
           <WarningIcons
               activeColor="#d9534f"
               warnings={player1.warnings}
-              size="clamp(1.5rem, 4vw, 2.5rem)"
+              size="clamp(1rem, 6vw, 12rem)"
           />
         </div>
 
@@ -141,7 +141,7 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
           <WarningIcons
               activeColor="#1d00fe"
               warnings={player2.warnings}
-              size="clamp(1.5rem, 4vw, 2.5rem)"
+              size="clamp(1rem, 6vw, 12rem)"
           />
         </div>
       </div>
