@@ -37,6 +37,11 @@ export const createInitialGameState = () => ({
     state: TIMER_STATES.STOPPED,
     isExtended: false
   },
+  subTimer: {
+    timeLeft: GAME_CONFIG.EXTENSION_TIME,
+    state: TIMER_STATES.STOPPED,
+    isExtended: false
+  },
   currentScreen: 'SETUP',
   winner: null,
   matchStartTime: null,
@@ -47,14 +52,13 @@ export const createInitialGameState = () => ({
 export const addPoint = (gameState, playerId) => {
   const newState = { ...gameState };
   if (newState.timer.state !== TIMER_STATES.PAUSED) {
-    console.log(newState.timer.state);
     return newState
   }
 
   newState.scores[playerId] += 1;
 
   // Reset all warnings when someone scores
-  resetAllWarnings(newState);
+  resetOutOfFieldWarnings(newState);
 
   // Log the action
   addLogEntry('POINT_SCORED', {
@@ -112,8 +116,13 @@ export const addWarning = (gameState, playerId, warningType) => {
     const opponent = playerId === PLAYERS.PLAYER1 ? PLAYERS.PLAYER2 : PLAYERS.PLAYER1;
     newState.scores[opponent] += 1;
 
-    // Reset all warnings
-    resetAllWarnings(newState);
+    if (warningType === WARNING_TYPES.OUT_OF_BOUNDS) {
+      resetOutOfFieldWarnings(newState)
+    }
+    else if (warningType === WARNING_TYPES.WEAPON_NOT_IN_HAND) {
+      // Reset all warnings
+      resetWeaponWarningsForPlayer(newState, playerId);
+    }
 
     // Log the penalty point
     addLogEntry('PENALTY_POINT', {
@@ -136,6 +145,18 @@ export const addWarning = (gameState, playerId, warningType) => {
   return newState;
 };
 
+export const resetOutOfFieldWarnings = (gameState) => {
+  Object.keys(gameState.warnings).forEach(playerId => {
+    gameState.warnings[playerId][WARNING_TYPES.OUT_OF_BOUNDS] = 0;
+  });
+
+  addLogEntry('OUT_OF_FIELD_RESET');
+}
+
+export const resetWeaponWarningsForPlayer = (gameState, playerId) => {
+  gameState.warnings[playerId][WARNING_TYPES.WEAPON_NOT_IN_HAND] = 0;
+  addLogEntry('WEAPON_RESET', {playerId})
+}
 // Reset all warnings for both players
 export const resetAllWarnings = (gameState) => {
   Object.keys(gameState.warnings).forEach(playerId => {
@@ -148,7 +169,15 @@ export const resetAllWarnings = (gameState) => {
 };
 
 // Start timer
-export const startTimer = (gameState) => {
+export const startTimer = (gameState, timerId) => {
+  if (timerId === 'sub') {
+    const newState = { ...gameState };
+    newState.subTimer.state = TIMER_STATES.RUNNING;
+
+    addLogEntry('SUBTIMER_STARTED', { timeLeft: newState.subTimer.timeLeft });
+    return newState;
+  }
+
   const newState = { ...gameState };
   newState.timer.state = TIMER_STATES.RUNNING;
 
@@ -161,7 +190,15 @@ export const startTimer = (gameState) => {
 };
 
 // Pause timer
-export const pauseTimer = (gameState) => {
+export const pauseTimer = (gameState, timerId) => {
+  if (timerId === 'sub') {
+    const newState = { ...gameState };
+    newState.subTimer.state = TIMER_STATES.PAUSED;
+
+    addLogEntry('TIMER_PAUSED', { timeLeft: newState.subTimer.timeLeft });
+    return newState;
+  }
+
   const newState = { ...gameState };
   newState.timer.state = TIMER_STATES.PAUSED;
 
@@ -175,6 +212,9 @@ export const resetTimer = (gameState) => {
   newState.timer.timeLeft = GAME_CONFIG.INITIAL_TIME;
   newState.timer.state = TIMER_STATES.STOPPED;
   newState.timer.isExtended = false;
+  newState.subTimer.timeLeft = GAME_CONFIG.EXTENSION_TIME;
+  newState.subTimer.state = TIMER_STATES.STOPPED;
+  newState.subTimer.isExtended = false;
 
   addLogEntry('TIMER_RESET');
   return newState;

@@ -133,7 +133,7 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
           NOTE: This is a placeholder. You need to provide the time
           from your gameState, for example: gameState.specialTimer.timeLeft
         */}
-          <SpecialTimer timeLeft={60} />
+          <SpecialTimer timeLeft={gameState.subTimer.timeLeft} />
         </div>
 
         {/* Player 2 Warnings */}

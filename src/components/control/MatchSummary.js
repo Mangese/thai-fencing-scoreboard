@@ -1,5 +1,5 @@
 import React from 'react';
-import { PLAYERS } from '../../utils/constants.js';
+import {PLAYERS, TIMER_STATES} from '../../utils/constants.js';
 import WarningIcons from '../common/WarningIcons.js';
 import TimerControls from './TimerControl.js'; // Import the new component
 
@@ -123,12 +123,16 @@ const MatchSummary = ({
                 timeLeft={gameState.timer.timeLeft}
                 isExtended={gameState.timer.isExtended}
                 timerId="main"
+                disabled={gameState.subTimer.state === TIMER_STATES.RUNNING}
             />
             <TimerControls
                 handleSetTime={handleSetTime}
                 handleStartTimer={handleStartTimer}
                 handlePauseTimer={handlePauseTimer}
-                timerState={gameState.timer.state}
+                timerState={gameState.subTimer.state}
+                timeLeft={gameState.subTimer.timeLeft}
+                isExtended={gameState.subTimer.isExtended}
+                disabled={gameState.timer.state === TIMER_STATES.RUNNING}
                 timerId="sub"
             />
           </div>

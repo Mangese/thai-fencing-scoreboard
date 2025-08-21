@@ -59,18 +59,6 @@ const Timer = ({
   };
 
   const getStatusText = () => {
-    if (timerState === TIMER_STATES.ENDED && !isExtended) {
-      return 'TIME UP - EXTEND?';
-    }
-    if (timerState === TIMER_STATES.ENDED && isExtended) {
-      return 'MATCH OVER';
-    }
-    if (timerState === TIMER_STATES.PAUSED) {
-      return 'PAUSED';
-    }
-    if (isExtended) {
-      return 'EXTRA TIME';
-    }
     return '';
   };
 

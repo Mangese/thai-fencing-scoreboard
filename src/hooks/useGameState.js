@@ -166,13 +166,13 @@ export const useGameState = () => {
   }, [setSyncedGameState, playWarningSound, playPointSound, playMatchEndSound]);
 
   // Timer Actions
-  const handleStartTimer = useCallback(() => {
-    setSyncedGameState(prevState => startTimer(prevState));
+  const handleStartTimer = useCallback((timerId) => {
+    setSyncedGameState(prevState => startTimer(prevState, timerId));
     playClickSound();
   }, [setSyncedGameState, playClickSound]);
 
-  const handlePauseTimer = useCallback(() => {
-    setSyncedGameState(prevState => pauseTimer(prevState));
+  const handlePauseTimer = useCallback((timerId) => {
+    setSyncedGameState(prevState => pauseTimer(prevState, timerId));
     playClickSound();
   }, [setSyncedGameState, playClickSound]);
 
@@ -248,9 +248,22 @@ export const useGameState = () => {
     };
   }, [playerNames, teamLogos, gameState.scores, gameState.warnings]);
 
-  const handleSetTime = useCallback((seconds) => {
+  const handleSetTime = useCallback((seconds, timerId) => {
     setSyncedGameState(prevState => {
       // Only allow setting time if timer is not running
+      if (timerId === 'sub') {
+        if (prevState.subTimer.state === TIMER_STATES.RUNNING) {
+          return prevState;
+        }
+        return {
+          ...prevState,
+          subTimer: {
+            ...prevState.subTimer,
+            timeLeft: seconds,
+          },
+        };
+      }
+
       if (prevState.timer.state === TIMER_STATES.RUNNING) {
         return prevState;
       }

@@ -9,6 +9,7 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
   // console.log('⏱️ useTimer: windowType:', windowType);
 
   const intervalRef = useRef(null);
+  const subIntervalRef = useRef(null);
   const lastAlertTimeRef = useRef(null);
   const { playOneMinuteAlert, playTimeUpAlert } = useAudio();
 
@@ -20,13 +21,14 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
   useEffect(() => {
     // console.log('⏱️ useTimer: Effect triggered');
     // console.log('⏱️ useTimer: gameState in effect:', gameState);
+    console.log('⏱️ useTimer: Game state:', gameState);
 
     // Safety checks
     if (!gameState) {
       // console.error('⏱️ useTimer: gameState is undefined!');
       return;
     }
-    if (!gameState.timer) {
+    if (!gameState.timer && !gameState.subTimer) {
       // console.error('⏱️ useTimer: gameState.timer is undefined!');
       return;
     }
@@ -39,7 +41,7 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
       return;
     }
 
-    // console.log('⏱️ useTimer: Timer state:', gameState.timer.state);
+    console.log('⏱️ useTimer: Timer state:', gameState.timer.state);
 
     // Clear any existing interval first
     if (intervalRef.current) {
@@ -48,14 +50,21 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
       intervalRef.current = null;
     }
 
+    // Clear any existing interval first
+    if (subIntervalRef.current) {
+      // console.log('⏱️ useTimer: Clearing existing interval');
+      clearInterval(subIntervalRef.current);
+      subIntervalRef.current = null;
+    }
+
     // Only start interval if timer should be running
-    if (gameState.timer.state === TIMER_STATES.RUNNING) {
+    if (gameState.timer?.state === TIMER_STATES.RUNNING) {
       intervalRef.current = setInterval(() => {
         setGameState(prevState => {
-          // Safety check - only update if still running
-          if (prevState.timer.state !== TIMER_STATES.RUNNING) {
-            return prevState;
-          }
+          // // Safety check - only update if still running
+          // if (prevState.timer?.state !== TIMER_STATES.RUNNING) {
+          //   return prevState;
+          // }
 
           const newTimeLeft = Math.max(0, prevState.timer.timeLeft - 1);
 
@@ -91,6 +100,25 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
         });
       }, 1000);
     }
+    else if (gameState.subTimer.state === TIMER_STATES.RUNNING) {
+      subIntervalRef.current = setInterval(() => {
+        setGameState(prevState => {
+          // // Safety check - only update if still running
+          // if (prevState.subTimer?.state !== TIMER_STATES.RUNNING) {
+          //   return prevState;
+          // }
+
+          const newTimeLeft = Math.max(0, prevState.subTimer.timeLeft - 1);
+
+          // Create new state
+          const newState = { ...prevState };
+          newState.subTimer = { ...prevState.subTimer };
+          newState.subTimer.timeLeft = newTimeLeft;
+
+          return newState;
+        });
+      }, 1000);
+    }
 
     // Cleanup function
     return () => {
@@ -98,8 +126,12 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
+      if (subIntervalRef.current) {
+        clearInterval(subIntervalRef.current);
+        subIntervalRef.current = null;
+      }
     };
-  }, [gameState?.timer?.state, shouldRunTimer]); // Add shouldRunTimer to dependencies
+  }, [gameState?.timer?.state, gameState?.subTimer?.state, shouldRunTimer]); // Add shouldRunTimer to dependencies
 
   // console.log('⏱️ useTimer: Effect dependency gameState?.timer?.state:', gameState?.timer?.state);
 

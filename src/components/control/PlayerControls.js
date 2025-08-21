@@ -182,11 +182,7 @@ const PlayerControls = ({
             }}
             disabled={disabled}
           >
-            <div>OUT</div>
-            <div style={countStyle}>
-              {WARNING_DISPLAY[WARNING_TYPES.OUT_OF_BOUNDS].icon}
-              ({getWarningCount(WARNING_TYPES.OUT_OF_BOUNDS)})
-            </div>
+            <div>ออกนอกวง</div>
           </button>
 
           {/* Weapon Warning */}
@@ -205,11 +201,7 @@ const PlayerControls = ({
             }}
             disabled={disabled}
           >
-            <div>WEAPON</div>
-            <div style={countStyle}>
-              {WARNING_DISPLAY[WARNING_TYPES.WEAPON_NOT_IN_HAND].icon}
-              ({getWarningCount(WARNING_TYPES.WEAPON_NOT_IN_HAND)})
-            </div>
+            <div>ดาบหลุดมือ</div>
           </button>
 
           {/* General Warning */}
@@ -228,7 +220,7 @@ const PlayerControls = ({
             }}
             disabled={disabled}
           >
-            <div>WARNING</div>
+            <div>เตือน</div>
             <div style={countStyle}>
               {WARNING_DISPLAY[WARNING_TYPES.GENERAL_WARNING].icon}
               ({getWarningCount(WARNING_TYPES.GENERAL_WARNING)})
