@@ -1,10 +1,15 @@
 import React from 'react';
 import { PLAYERS } from '../../utils/constants.js';
-import { formatTime } from '../../utils/gameLogic.js';
-import Timer from '../common/Timer.js';
 import WarningIcons from '../common/WarningIcons.js';
+import TimerControls from './TimerControl.js'; // Import the new component
 
-const MatchSummary = ({ gameState, getPlayerData }) => {
+const MatchSummary = ({
+                        gameState,
+                        getPlayerData,
+                        handleStartTimer, // Add new prop
+                        handlePauseTimer, // Add new prop
+                        handleSetTime     // Add new prop
+                      }) => {
   const player1 = getPlayerData(PLAYERS.PLAYER1);
   const player2 = getPlayerData(PLAYERS.PLAYER2);
 
@@ -44,15 +49,8 @@ const MatchSummary = ({ gameState, getPlayerData }) => {
     marginBottom: '0.5rem'
   };
 
-  const player1NameStyle = {
-    ...playerNameStyle,
-    color: '#FF4444'
-  };
-
-  const player2NameStyle = {
-    ...playerNameStyle,
-    color: '#4444FF'
-  };
+  const player1NameStyle = { ...playerNameStyle, color: '#FF4444' };
+  const player2NameStyle = { ...playerNameStyle, color: '#4444FF' };
 
   const scoreStyle = {
     fontSize: '2rem',
@@ -60,15 +58,8 @@ const MatchSummary = ({ gameState, getPlayerData }) => {
     marginBottom: '0.5rem'
   };
 
-  const player1ScoreStyle = {
-    ...scoreStyle,
-    color: '#FF4444'
-  };
-
-  const player2ScoreStyle = {
-    ...scoreStyle,
-    color: '#4444FF'
-  };
+  const player1ScoreStyle = { ...scoreStyle, color: '#FF4444' };
+  const player2ScoreStyle = { ...scoreStyle, color: '#4444FF' };
 
   const warningsLabelStyle = {
     fontSize: '0.9rem',
@@ -76,11 +67,12 @@ const MatchSummary = ({ gameState, getPlayerData }) => {
     marginBottom: '0.25rem'
   };
 
-  const timerContainerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
+  // Updated style for the new timer section layout
+  const timerSectionStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
-    padding: '0 1rem'
+    gap: '1rem',
   };
 
   const statusStyle = {
@@ -103,48 +95,57 @@ const MatchSummary = ({ gameState, getPlayerData }) => {
   };
 
   return (
-    <div style={containerStyle}>
-      <h3 style={headerStyle}>Match Status</h3>
+      <div style={containerStyle}>
+        <h3 style={headerStyle}>Match Status</h3>
 
-      {gameState.winner && (
-        <div style={winnerStyle}>
-          🏆 Winner: {gameState.winner === PLAYERS.PLAYER1 ? player1.name :
-          gameState.winner === PLAYERS.PLAYER2 ? player2.name : 'Draw'}
+        {gameState.winner && (
+            <div style={winnerStyle}>
+              🏆 Winner: {gameState.winner === PLAYERS.PLAYER1 ? player1.name : player2.name}
+            </div>
+        )}
+
+        <div style={summaryGridStyle}>
+          {/* Player 1 Summary */}
+          <div style={playerSummaryStyle}>
+            <div style={player1NameStyle}>{player1.name}</div>
+            <div style={player1ScoreStyle}>{player1.score}</div>
+            <div style={warningsLabelStyle}>Warnings:</div>
+            <WarningIcons activeColor="#d9534f" warnings={player1.warnings} size="3rem" />
+          </div>
+
+          {/* NEW TIMER SECTION */}
+          <div style={timerSectionStyle}>
+            <TimerControls
+                handleSetTime={handleSetTime}
+                handleStartTimer={handleStartTimer}
+                handlePauseTimer={handlePauseTimer}
+                timerState={gameState.timer.state}
+                timeLeft={gameState.timer.timeLeft}
+                isExtended={gameState.timer.isExtended}
+                timerId="main"
+            />
+            <TimerControls
+                handleSetTime={handleSetTime}
+                handleStartTimer={handleStartTimer}
+                handlePauseTimer={handlePauseTimer}
+                timerState={gameState.timer.state}
+                timerId="sub"
+            />
+          </div>
+
+          {/* Player 2 Summary */}
+          <div style={playerSummaryStyle}>
+            <div style={player2NameStyle}>{player2.name}</div>
+            <div style={player2ScoreStyle}>{player2.score}</div>
+            <div style={warningsLabelStyle}>Warnings:</div>
+            <WarningIcons activeColor="#1d00fe" warnings={player2.warnings} size="3rem" />
+          </div>
         </div>
-      )}
 
-      <div style={summaryGridStyle}>
-        {/* Player 1 Summary */}
-        <div style={playerSummaryStyle}>
-          <div style={player1NameStyle}>{player1.name}</div>
-          <div style={player1ScoreStyle}>{player1.score}</div>
-          <div style={warningsLabelStyle}>Warnings:</div>
-          <WarningIcons activeColor="#d9534f" warnings={player1.warnings} size="3rem" />
-        </div>
-
-        {/* Timer */}
-        <div style={timerContainerStyle}>
-          <Timer
-            timeLeft={gameState.timer.timeLeft}
-            timerState={gameState.timer.state}
-            isExtended={gameState.timer.isExtended}
-            fontSize="2.5rem"
-          />
-        </div>
-
-        {/* Player 2 Summary */}
-        <div style={playerSummaryStyle}>
-          <div style={player2NameStyle}>{player2.name}</div>
-          <div style={player2ScoreStyle}>{player2.score}</div>
-          <div style={warningsLabelStyle}>Warnings:</div>
-          <WarningIcons activeColor="#1d00fe" warnings={player2.warnings} size="3rem" />
+        <div style={statusStyle}>
+          {gameState.winner ? 'Match Completed' : 'Match in Progress'}
         </div>
       </div>
-
-      <div style={statusStyle}>
-        {gameState.winner ? 'Match Completed' : 'Match in Progress'}
-      </div>
-    </div>
   );
 };
 

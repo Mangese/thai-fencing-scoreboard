@@ -18,7 +18,7 @@ import {
   loadTeamLogos,
   clearAllGameData
 } from '../utils/storage.js';
-import { PLAYERS, SCREEN_TYPES } from '../utils/constants.js';
+import { PLAYERS, SCREEN_TYPES, TIMER_STATES } from '../utils/constants.js';
 import { useAudio } from './useAudio.js';
 
 // Main game state management hook
@@ -248,6 +248,23 @@ export const useGameState = () => {
     };
   }, [playerNames, teamLogos, gameState.scores, gameState.warnings]);
 
+  const handleSetTime = useCallback((seconds) => {
+    setSyncedGameState(prevState => {
+      // Only allow setting time if timer is not running
+      if (prevState.timer.state === TIMER_STATES.RUNNING) {
+        return prevState;
+      }
+      return {
+        ...prevState,
+        timer: {
+          ...prevState.timer,
+          timeLeft: seconds,
+        },
+      };
+    });
+    playClickSound();
+  }, [setSyncedGameState, playClickSound]);
+
   return {
     // State
     gameState,
@@ -265,6 +282,7 @@ export const useGameState = () => {
     handlePauseTimer,
     handleResetTimer,
     handleExtendTimer,
+    handleSetTime,
 
     // Navigation
     setCurrentScreen,
