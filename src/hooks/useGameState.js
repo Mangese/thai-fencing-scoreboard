@@ -18,7 +18,7 @@ import {
   loadTeamLogos,
   clearAllGameData
 } from '../utils/storage.js';
-import { PLAYERS, SCREEN_TYPES, TIMER_STATES } from '../utils/constants.js';
+import { PLAYERS, SCREEN_TYPES, TIMER_STATES, MATCH_MODES, GAME_CONFIG } from '../utils/constants.js';
 import { useAudio } from './useAudio.js';
 
 // Main game state management hook
@@ -29,6 +29,17 @@ export const useGameState = () => {
     // console.log('🎮 useGameState: Initializing state');
     const saved = loadGameState();
     const initial = saved || createInitialGameState();
+
+    // Backward compatibility: ensure new fields exist
+    if (!initial.mode) {
+      initial.mode = MATCH_MODES.NORMAL;
+    }
+    if (typeof initial.phase === 'undefined') {
+      initial.phase = 1;
+    }
+    if (typeof initial.isBreak === 'undefined') {
+      initial.isBreak = false;
+    }
     // console.log('🎮 useGameState: Initial state:', initial);
     return initial;
   });
@@ -211,17 +222,29 @@ export const useGameState = () => {
   }, []);
 
   // Game Management
-  const startNewMatch = useCallback((player1Name, player1Logo, player2Name, player2Logo) => {
-    const initialState = createInitialGameState();
-    initialState.currentScreen = SCREEN_TYPES.GAME;
-    initialState.matchStartTime = new Date().toISOString();
-    initialState.name[PLAYERS.PLAYER1] = player1Name;
-    initialState.name[PLAYERS.PLAYER2] = player2Name;
-    initialState.logo[PLAYERS.PLAYER1] = player1Logo;
-    initialState.logo[PLAYERS.PLAYER2] = player2Logo;
-    setSyncedGameState(initialState);
-    playClickSound();
-  }, [setSyncedGameState, playClickSound]);
+  const startNewMatch = useCallback(
+    (player1Name, player1Logo, player2Name, player2Logo, mode = MATCH_MODES.NORMAL) => {
+      const initialState = createInitialGameState();
+      initialState.currentScreen = SCREEN_TYPES.GAME;
+      initialState.matchStartTime = new Date().toISOString();
+      initialState.name[PLAYERS.PLAYER1] = player1Name;
+      initialState.name[PLAYERS.PLAYER2] = player2Name;
+      initialState.logo[PLAYERS.PLAYER1] = player1Logo;
+      initialState.logo[PLAYERS.PLAYER2] = player2Logo;
+      initialState.mode = mode;
+
+      if (mode === MATCH_MODES.SPEED) {
+        initialState.timer.timeLeft = GAME_CONFIG.SPEED_MAIN_TIME;
+        initialState.subTimer.timeLeft = GAME_CONFIG.SPEED_BREAK_TIME;
+        initialState.phase = 1;
+        initialState.isBreak = false;
+      }
+
+      setSyncedGameState(initialState);
+      playClickSound();
+    },
+    [setSyncedGameState, playClickSound]
+  );
 
   const resetGame = useCallback(() => {
     setSyncedGameState(createInitialGameState());

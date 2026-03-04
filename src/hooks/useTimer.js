@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { TIMER_STATES, GAME_CONFIG, WINDOW_TYPES } from '../utils/constants.js';
+import { TIMER_STATES, GAME_CONFIG, WINDOW_TYPES, MATCH_MODES } from '../utils/constants.js';
 import { useAudio } from './useAudio.js';
 
 // Custom hook for timer management
@@ -11,7 +11,13 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
   const intervalRef = useRef(null);
   const subIntervalRef = useRef(null);
   const lastAlertTimeRef = useRef(null);
-  const { playOneMinuteAlert, playTimeUpAlert } = useAudio();
+  const {
+    playOneMinuteAlert,
+    playTimeUpAlert,
+    playHalfTimeSound,
+    playRestEndSound,
+    playMatchEndSound
+  } = useAudio();
 
   // Only run timer logic in Control window
   const shouldRunTimer = windowType === WINDOW_TYPES.CONTROL;
@@ -75,23 +81,64 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
 
           // Check if time is up
           if (newTimeLeft === 0) {
-            newState.timer.state = TIMER_STATES.ENDED;
+            const mode = prevState.mode || MATCH_MODES.NORMAL;
 
-            if (newState.timer.isExtended) {
-              // Match ends immediately if extended time is up
-              newState.matchEndTime = new Date().toISOString();
-              newState.currentScreen = 'SUMMARY';
+            // Speed mode has special flow: 2 x 1:00 with 30s break
+            if (mode === MATCH_MODES.SPEED && !newState.timer.isExtended) {
+              const currentPhase = prevState.phase || 1;
 
-              // Determine winner by score
-              const score1 = newState.scores['PLAYER1'];
-              const score2 = newState.scores['PLAYER2'];
+              if (currentPhase === 1) {
+                // End of first phase: prepare for break and second phase
+                newState.phase = 2;
+                newState.isBreak = true;
+                newState.timer.state = TIMER_STATES.STOPPED;
+                newState.timer.timeLeft = GAME_CONFIG.SPEED_MAIN_TIME;
 
-              if (score1 > score2) {
-                newState.winner = 'PLAYER1';
-              } else if (score2 > score1) {
-                newState.winner = 'PLAYER2';
+                // Play half-time sound at the end of first half
+                playHalfTimeSound();
               } else {
-                newState.winner = 'DRAW';
+                // End of second phase: end match by score
+                newState.timer.state = TIMER_STATES.ENDED;
+                newState.matchEndTime = new Date().toISOString();
+                newState.currentScreen = 'SUMMARY';
+
+                const score1 = newState.scores['PLAYER1'];
+                const score2 = newState.scores['PLAYER2'];
+
+                if (score1 > score2) {
+                  newState.winner = 'PLAYER1';
+                } else if (score2 > score1) {
+                  newState.winner = 'PLAYER2';
+                } else {
+                  newState.winner = 'DRAW';
+                }
+
+                // Play match end sound when the second half ends
+                playMatchEndSound();
+              }
+            } else {
+              // Normal mode (or extended time in any mode): original behavior
+              newState.timer.state = TIMER_STATES.ENDED;
+
+              if (newState.timer.isExtended) {
+                // Match ends immediately if extended time is up
+                newState.matchEndTime = new Date().toISOString();
+                newState.currentScreen = 'SUMMARY';
+
+                // Determine winner by score
+                const score1 = newState.scores['PLAYER1'];
+                const score2 = newState.scores['PLAYER2'];
+
+                if (score1 > score2) {
+                  newState.winner = 'PLAYER1';
+                } else if (score2 > score1) {
+                  newState.winner = 'PLAYER2';
+                } else {
+                  newState.winner = 'DRAW';
+                }
+
+                // Play match end sound when extended time finishes
+                playMatchEndSound();
               }
             }
           }
@@ -115,6 +162,18 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
           newState.subTimer = { ...prevState.subTimer };
           newState.subTimer.timeLeft = newTimeLeft;
 
+          if (newTimeLeft === 0) {
+            // Auto-stop sub timer when it runs out
+            newState.subTimer.state = TIMER_STATES.STOPPED;
+
+            // End of rest period in speed mode
+            const mode = prevState.mode || MATCH_MODES.NORMAL;
+            if (mode === MATCH_MODES.SPEED && prevState.isBreak) {
+              newState.isBreak = false;
+              playRestEndSound();
+            }
+          }
+
           return newState;
         });
       }, 1000);
@@ -131,7 +190,7 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
         subIntervalRef.current = null;
       }
     };
-  }, [gameState?.timer?.state, gameState?.subTimer?.state, shouldRunTimer]); // Add shouldRunTimer to dependencies
+  }, [gameState?.timer?.state, gameState?.subTimer?.state, shouldRunTimer, playHalfTimeSound, playRestEndSound, playMatchEndSound]); // Add shouldRunTimer to dependencies
 
   // console.log('⏱️ useTimer: Effect dependency gameState?.timer?.state:', gameState?.timer?.state);
 
@@ -152,8 +211,11 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
 
     // console.log('⏱️ useTimer: Audio effect values:', { timeLeft, timerState, isExtended });
 
-    // Play 1-minute alert (only for main timer, not extended)
-    if (!isExtended &&
+    const mode = gameState.mode || MATCH_MODES.NORMAL;
+
+    // Play 1-minute alert (only for main timer, not extended, and not in speed mode)
+    if (mode !== MATCH_MODES.SPEED &&
+      !isExtended &&
       timeLeft === GAME_CONFIG.AUDIO_ALERT_TIME &&
       timerState === TIMER_STATES.RUNNING &&
       lastAlertTimeRef.current !== timeLeft) {
@@ -173,7 +235,7 @@ export const useTimer = (gameState, setGameState, windowType = WINDOW_TYPES.CONT
     }
 
     // Reset alert tracker when timer is reset
-    if (timeLeft === GAME_CONFIG.INITIAL_TIME) {
+    if (timeLeft === GAME_CONFIG.INITIAL_TIME || timeLeft === GAME_CONFIG.SPEED_MAIN_TIME) {
       lastAlertTimeRef.current = null;
     }
   }, [gameState?.timer?.timeLeft, gameState?.timer?.state, gameState?.timer?.isExtended, shouldRunTimer, playOneMinuteAlert, playTimeUpAlert]);

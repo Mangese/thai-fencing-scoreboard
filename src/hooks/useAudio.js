@@ -1,6 +1,9 @@
 import { useCallback, useRef } from 'react';
-import oneMinuteAlertSound from '../assets/1min.mp3'; // Add this
-import timeUpAlertSound from '../assets/end_match.mp3';   // Add this
+import oneMinuteAlertSound from '../assets/1min.mp3';
+import timeUpAlertSound from '../assets/end_match.mp3';
+import halfTimeSound from '../assets/half.mp3';
+import restEndSound from '../assets/rest-end.mp3';
+
 // Custom hook for audio alerts
 export const useAudio = () => {
   console.log('🔊 useAudio: Hook called');
@@ -53,6 +56,16 @@ export const useAudio = () => {
     playAudioFile(timeUpAlertSound, 1);
   }, [createBeep]);
 
+  // Play half-time sound (end of first half in speed mode)
+  const playHalfTimeSound = useCallback(() => {
+    playAudioFile(halfTimeSound, 1);
+  }, [createBeep]);
+
+  // Play rest-end sound (end of 30s break in speed mode)
+  const playRestEndSound = useCallback(() => {
+    playAudioFile(restEndSound, 1);
+  }, [createBeep]);
+
   // Play button click sound
   const playClickSound = useCallback(() => {
     createBeep(1000, 100, 0.2);
@@ -80,6 +93,8 @@ export const useAudio = () => {
   return {
     playOneMinuteAlert,
     playTimeUpAlert,
+    playHalfTimeSound,
+    playRestEndSound,
     playClickSound,
     playPointSound,
     playWarningSound,

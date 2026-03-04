@@ -1,5 +1,5 @@
 import React from 'react';
-import {PLAYERS, TIMER_STATES} from '../../utils/constants.js';
+import { PLAYERS, TIMER_STATES, MATCH_MODES } from '../../utils/constants.js';
 import WarningIcons from '../common/WarningIcons.js';
 import TimerControls from './TimerControl.js'; // Import the new component
 
@@ -94,6 +94,19 @@ const MatchSummary = ({
     marginBottom: '1rem'
   };
 
+  let statusText = 'Match in Progress';
+  if (gameState.winner) {
+    statusText = 'Match Completed';
+  } else if (gameState.mode === MATCH_MODES.SPEED) {
+    if (gameState.isBreak) {
+      statusText = 'Break Time - 30 seconds rest';
+    } else if (gameState.phase === 1) {
+      statusText = 'Speed Mode - Phase 1';
+    } else if (gameState.phase === 2) {
+      statusText = 'Speed Mode - Phase 2';
+    }
+  }
+
   return (
       <div style={containerStyle}>
         <h3 style={headerStyle}>Match Status</h3>
@@ -147,7 +160,7 @@ const MatchSummary = ({
         </div>
 
         <div style={statusStyle}>
-          {gameState.winner ? 'Match Completed' : 'Match in Progress'}
+          {statusText}
         </div>
       </div>
   );

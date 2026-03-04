@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useGameState } from './hooks/useGameState.js';
 import { useTimer } from './hooks/useTimer.js';
-import { SCREEN_TYPES, WINDOW_TYPES } from './utils/constants.js';
+import { SCREEN_TYPES, WINDOW_TYPES, MATCH_MODES } from './utils/constants.js';
 import DisplayScreen from './components/display/DisplayScreen.js';
 import './index.css';
 
 // Import screen components
 import SetupScreen from './components/setup/SetupScreen.js';
 import ControlScreen from './components/control/ControlScreen.js';
+import ControlScreenSpeed from './components/control/ControlScreenSpeed.js';
 import SummaryScreen from './components/summary/SummaryScreen.js';
 import LogsScreen from './components/logs/LogsScreen.js';
 import {clearAllGameData} from "./utils/storage";
@@ -96,7 +97,9 @@ function App() {
         return <SetupScreen {...gameStateHook} />;
 
       case SCREEN_TYPES.GAME:
-        return <ControlScreen {...gameStateHook} />;
+        return gameState.mode === MATCH_MODES.SPEED
+          ? <ControlScreenSpeed {...gameStateHook} />
+          : <ControlScreen {...gameStateHook} />;
 
       case SCREEN_TYPES.SUMMARY:
         return <SummaryScreen {...gameStateHook} />;

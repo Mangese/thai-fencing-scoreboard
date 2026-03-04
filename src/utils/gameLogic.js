@@ -2,7 +2,8 @@ import {
   GAME_CONFIG,
   WARNING_TYPES,
   PLAYERS,
-  TIMER_STATES
+  TIMER_STATES,
+  MATCH_MODES
 } from './constants.js';
 import { addLogEntry } from './storage.js';
 
@@ -42,6 +43,9 @@ export const createInitialGameState = () => ({
     state: TIMER_STATES.STOPPED,
     isExtended: false
   },
+  mode: MATCH_MODES.NORMAL,
+  phase: 1,          // For speed mode: 1 = first phase, 2 = second phase
+  isBreak: false,    // For speed mode: true during 30s break period
   currentScreen: 'SETUP',
   winner: null,
   matchStartTime: null,
@@ -209,12 +213,22 @@ export const pauseTimer = (gameState, timerId) => {
 // Reset timer to initial time
 export const resetTimer = (gameState) => {
   const newState = { ...gameState };
-  newState.timer.timeLeft = GAME_CONFIG.INITIAL_TIME;
+  const isSpeedMode = newState.mode === MATCH_MODES.SPEED;
+
+  const mainTime = isSpeedMode ? GAME_CONFIG.SPEED_MAIN_TIME : GAME_CONFIG.INITIAL_TIME;
+  const subTime = isSpeedMode ? GAME_CONFIG.SPEED_BREAK_TIME : GAME_CONFIG.EXTENSION_TIME;
+
+  newState.timer.timeLeft = mainTime;
   newState.timer.state = TIMER_STATES.STOPPED;
   newState.timer.isExtended = false;
-  newState.subTimer.timeLeft = GAME_CONFIG.EXTENSION_TIME;
+  newState.subTimer.timeLeft = subTime;
   newState.subTimer.state = TIMER_STATES.STOPPED;
   newState.subTimer.isExtended = false;
+
+  if (isSpeedMode) {
+    newState.phase = 1;
+    newState.isBreak = false;
+  }
 
   addLogEntry('TIMER_RESET');
   return newState;

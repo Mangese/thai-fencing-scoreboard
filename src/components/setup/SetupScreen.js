@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PLAYERS, DEFAULTS } from '../../utils/constants.js';
+import { PLAYERS, DEFAULTS, MATCH_MODES } from '../../utils/constants.js';
 import LogoUpload from './LogoUpload.js';
 
 const SetupScreen = ({
@@ -13,6 +13,8 @@ const SetupScreen = ({
     player1: playerNames.player1 || '',
     player2: playerNames.player2 || ''
   });
+
+  const [matchMode, setMatchMode] = useState(MATCH_MODES.NORMAL);
 
   const handleNameChange = (playerId, value) => {
     const playerKey = playerId.toLowerCase();
@@ -30,7 +32,13 @@ const SetupScreen = ({
       return;
     }
 
-    startNewMatch(localNames.player1, teamLogos.player1, localNames.player2, teamLogos.player2);
+    startNewMatch(
+      localNames.player1,
+      teamLogos.player1,
+      localNames.player2,
+      teamLogos.player2,
+      matchMode
+    );
   };
 
   const containerStyle = {
@@ -68,6 +76,28 @@ const SetupScreen = ({
     maxWidth: '1200px',
     margin: '0 auto',
     width: '100%'
+  };
+
+  const modeSelectorContainerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '1.5rem',
+    marginBottom: '1.5rem'
+  };
+
+  const modeLabelStyle = {
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    color: '#333'
+  };
+
+  const modeOptionStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.4rem',
+    fontSize: '1rem',
+    cursor: 'pointer'
   };
 
   const playerSectionStyle = {
@@ -151,6 +181,29 @@ const SetupScreen = ({
       <div style={headerStyle}>
         <h1 style={titleStyle}>Thai Fencing Scoreboard</h1>
         <p style={subtitleStyle}>Setup Match - Enter Player Information</p>
+      </div>
+      <div style={modeSelectorContainerStyle}>
+        <span style={modeLabelStyle}>Match Mode:</span>
+        <label style={modeOptionStyle}>
+          <input
+            type="radio"
+            name="matchMode"
+            value={MATCH_MODES.NORMAL}
+            checked={matchMode === MATCH_MODES.NORMAL}
+            onChange={() => setMatchMode(MATCH_MODES.NORMAL)}
+          />
+          <span>Normal (3:00 + 1:00)</span>
+        </label>
+        <label style={modeOptionStyle}>
+          <input
+            type="radio"
+            name="matchMode"
+            value={MATCH_MODES.SPEED}
+            checked={matchMode === MATCH_MODES.SPEED}
+            onChange={() => setMatchMode(MATCH_MODES.SPEED)}
+          />
+          <span>Speed (2 x 1:00 with 0:30 break)</span>
+        </label>
       </div>
       <button
           style={startButtonStyle}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PLAYERS } from '../../utils/constants.js';
+import { PLAYERS, MATCH_MODES } from '../../utils/constants.js';
 import TeamLogo from '../common/TeamLogo.js';
 import PlayerName from '../common/PlayerName.js';
 import Score from '../common/Score.js';
@@ -56,6 +56,14 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
     alignItems: 'center',
     flexDirection: 'column',
   };
+
+  const breakTextStyle = {
+    marginTop: '0.5rem',
+    fontSize: 'clamp(1.2rem, 2.5vw, 2rem)',
+    color: '#c0392b',
+  };
+
+  const isSpeedBreak = gameState.mode === MATCH_MODES.SPEED && gameState.isBreak;
 
   return (
       <div style={containerStyle}>
@@ -127,13 +135,14 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
           />
         </div>
 
-        {/* Special Timer */}
+        {/* Special Timer + Break Text */}
         <div style={cellStyle}>
-          {/*
-          NOTE: This is a placeholder. You need to provide the time
-          from your gameState, for example: gameState.specialTimer.timeLeft
-        */}
           <SpecialTimer timeLeft={gameState.subTimer.timeLeft} />
+          {isSpeedBreak && (
+            <div style={breakTextStyle}>
+              Break Time
+            </div>
+          )}
         </div>
 
         {/* Player 2 Warnings */}
