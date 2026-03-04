@@ -2,7 +2,17 @@ import React from 'react';
 import { TIMER_STATES } from '../../utils/constants.js';
 import Timer from "../common/Timer";
 
-const TimerControls = ({ handleSetTime, handleStartTimer, handlePauseTimer, timerState, timeLeft, isExtended, timerId, disabled }) => {
+const TimerControls = ({
+    handleSetTime,
+    handleStartTimer,
+    handlePauseTimer,
+    timerState,
+    timeLeft,
+    isExtended,
+    timerId,
+    disabled,
+    showPresetButtons = true,
+}) => {
     const isRunning = timerState === TIMER_STATES.RUNNING;
     // Allow setting time when paused or stopped
     const canSetTime = !disabled && (timerState === TIMER_STATES.PAUSED || timerState === TIMER_STATES.STOPPED);
@@ -55,31 +65,35 @@ const TimerControls = ({ handleSetTime, handleStartTimer, handlePauseTimer, time
 
     return (
         <div style={containerStyle}>
-            <div style={timeSetRowStyle}>
-                <button
-                    style={canSetTime ? timeSetButtonStyle : disabledTimeSetButtonStyle}
-                    onClick={() => handleSetTime(60, timerId)}
-                    disabled={!canSetTime}
-                >
-                    1 MIN
-                </button>
-                { timerId === "main" && <button
-                    style={canSetTime ? timeSetButtonStyle : disabledTimeSetButtonStyle}
-                    onClick={() => handleSetTime(180, timerId)}
-                    disabled={!canSetTime}
-                >
-                    3 MIN
-                </button>
-                }
-                { timerId === "sub" && <button
-                    style={canSetTime ? timeSetButtonStyle : disabledTimeSetButtonStyle}
-                    onClick={() => handleSetTime(300, timerId)}
-                    disabled={!canSetTime}
-                >
-                    5 MIN
-                </button>
-                }
-            </div>
+            {showPresetButtons && (
+                <div style={timeSetRowStyle}>
+                    <button
+                        style={canSetTime ? timeSetButtonStyle : disabledTimeSetButtonStyle}
+                        onClick={() => handleSetTime(60, timerId)}
+                        disabled={!canSetTime}
+                    >
+                        1 MIN
+                    </button>
+                    {timerId === "main" && (
+                        <button
+                            style={canSetTime ? timeSetButtonStyle : disabledTimeSetButtonStyle}
+                            onClick={() => handleSetTime(180, timerId)}
+                            disabled={!canSetTime}
+                        >
+                            3 MIN
+                        </button>
+                    )}
+                    {timerId === "sub" && (
+                        <button
+                            style={canSetTime ? timeSetButtonStyle : disabledTimeSetButtonStyle}
+                            onClick={() => handleSetTime(300, timerId)}
+                            disabled={!canSetTime}
+                        >
+                            5 MIN
+                        </button>
+                    )}
+                </div>
+            )}
             <button
                 style={disabled ? disabledstartStopButtonStyle : startStopButtonStyle}
                 onClick={isRunning ? () => handlePauseTimer(timerId) : () => handleStartTimer(timerId)}

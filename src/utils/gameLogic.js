@@ -176,6 +176,16 @@ export const resetAllWarnings = (gameState) => {
 export const startTimer = (gameState, timerId) => {
   if (timerId === 'sub') {
     const newState = { ...gameState };
+
+    // In speed mode, only allow the rest timer to start
+    // after the first phase has fully finished (break period).
+    if (newState.mode === MATCH_MODES.SPEED) {
+      const isAfterFirstPhase = newState.phase === 2 && newState.isBreak === true;
+      if (!isAfterFirstPhase) {
+        return newState;
+      }
+    }
+
     newState.subTimer.state = TIMER_STATES.RUNNING;
 
     addLogEntry('SUBTIMER_STARTED', { timeLeft: newState.subTimer.timeLeft });

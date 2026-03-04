@@ -137,6 +137,7 @@ const MatchSummary = ({
                 isExtended={gameState.timer.isExtended}
                 timerId="main"
                 disabled={gameState.subTimer.state === TIMER_STATES.RUNNING}
+                showPresetButtons={gameState.mode !== MATCH_MODES.SPEED}
             />
             <TimerControls
                 handleSetTime={handleSetTime}
@@ -145,8 +146,15 @@ const MatchSummary = ({
                 timerState={gameState.subTimer.state}
                 timeLeft={gameState.subTimer.timeLeft}
                 isExtended={gameState.subTimer.isExtended}
-                disabled={gameState.timer.state === TIMER_STATES.RUNNING}
+                disabled={
+                  gameState.timer.state === TIMER_STATES.RUNNING ||
+                  (
+                    gameState.mode === MATCH_MODES.SPEED &&
+                    !(gameState.phase === 2 && gameState.isBreak === true)
+                  )
+                }
                 timerId="sub"
+                showPresetButtons={gameState.mode !== MATCH_MODES.SPEED}
             />
           </div>
 
