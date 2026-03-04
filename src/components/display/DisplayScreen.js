@@ -140,7 +140,7 @@ const DisplayScreen = ({ gameState, getPlayerData }) => {
           <SpecialTimer timeLeft={gameState.subTimer.timeLeft} />
           {isSpeedBreak && (
             <div style={breakTextStyle}>
-              Break Time
+              กำลังพัก
             </div>
           )}
         </div>

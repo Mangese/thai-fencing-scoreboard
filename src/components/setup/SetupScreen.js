@@ -183,7 +183,7 @@ const SetupScreen = ({
         <p style={subtitleStyle}>Setup Match - Enter Player Information</p>
       </div>
       <div style={modeSelectorContainerStyle}>
-        <span style={modeLabelStyle}>Match Mode:</span>
+        <span style={modeLabelStyle}>เลือกประเภทการแข่ง:</span>
         <label style={modeOptionStyle}>
           <input
             type="radio"
@@ -192,7 +192,7 @@ const SetupScreen = ({
             checked={matchMode === MATCH_MODES.NORMAL}
             onChange={() => setMatchMode(MATCH_MODES.NORMAL)}
           />
-          <span>Normal (3:00 + 1:00)</span>
+          <span>ปกติ (3:00 + 1:00)</span>
         </label>
         <label style={modeOptionStyle}>
           <input
@@ -202,7 +202,7 @@ const SetupScreen = ({
             checked={matchMode === MATCH_MODES.SPEED}
             onChange={() => setMatchMode(MATCH_MODES.SPEED)}
           />
-          <span>Speed (2 x 1:00 with 0:30 break)</span>
+          <span>แข่ง 1 นาที พัก 30 วินาที แข่งต่อ 1 นาที (1:00 + 0:30 + 1:00)</span>
         </label>
       </div>
       <button

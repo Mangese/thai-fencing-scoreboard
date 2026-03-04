@@ -95,17 +95,25 @@ const MatchSummary = ({
   };
 
   let statusText = 'Match in Progress';
+  let statusIsSpeedPhase = false;
   if (gameState.winner) {
     statusText = 'Match Completed';
   } else if (gameState.mode === MATCH_MODES.SPEED) {
     if (gameState.isBreak) {
-      statusText = 'Break Time - 30 seconds rest';
+      statusText = 'กำลังพัก 30 วินาที';
+      statusIsSpeedPhase = true;
     } else if (gameState.phase === 1) {
-      statusText = 'Speed Mode - Phase 1';
+      statusText = 'กำลังแข่ง ครึ่งแรก 1 นาที';
+      statusIsSpeedPhase = true;
     } else if (gameState.phase === 2) {
-      statusText = 'Speed Mode - Phase 2';
+      statusText = 'กำลังแข่ง ครึ่งหลัง 1 นาที';
+      statusIsSpeedPhase = true;
     }
   }
+
+  const speedStatusStyle = statusIsSpeedPhase
+    ? { ...statusStyle, fontSize: '1.2rem', fontWeight: 'bold' }
+    : statusStyle;
 
   return (
       <div style={containerStyle}>
@@ -138,6 +146,7 @@ const MatchSummary = ({
                 timerId="main"
                 disabled={gameState.subTimer.state === TIMER_STATES.RUNNING}
                 showPresetButtons={gameState.mode !== MATCH_MODES.SPEED}
+                startLabel={gameState.mode === MATCH_MODES.SPEED ? 'จับเวลาแข่ง' : 'START'}
             />
             <TimerControls
                 handleSetTime={handleSetTime}
@@ -155,6 +164,7 @@ const MatchSummary = ({
                 }
                 timerId="sub"
                 showPresetButtons={gameState.mode !== MATCH_MODES.SPEED}
+                startLabel={gameState.mode === MATCH_MODES.SPEED ? 'จับเวลาพัก' : 'START'}
             />
           </div>
 
@@ -167,7 +177,7 @@ const MatchSummary = ({
           </div>
         </div>
 
-        <div style={statusStyle}>
+        <div style={speedStatusStyle}>
           {statusText}
         </div>
       </div>

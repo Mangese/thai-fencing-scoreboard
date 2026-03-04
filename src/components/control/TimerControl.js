@@ -12,6 +12,7 @@ const TimerControls = ({
     timerId,
     disabled,
     showPresetButtons = true,
+    startLabel = 'START',
 }) => {
     const isRunning = timerState === TIMER_STATES.RUNNING;
     // Allow setting time when paused or stopped
@@ -63,6 +64,8 @@ const TimerControls = ({
         opacity: 0.5,
     };
 
+    const buttonText = isRunning ? 'STOP' : startLabel;
+
     return (
         <div style={containerStyle}>
             {showPresetButtons && (
@@ -99,7 +102,7 @@ const TimerControls = ({
                 onClick={isRunning ? () => handlePauseTimer(timerId) : () => handleStartTimer(timerId)}
                 disabled={disabled}
             >
-                {isRunning ? 'STOP' : 'START'}
+                {buttonText}
             </button>
             <div style={timeSetRowStyle}>
                 <Timer

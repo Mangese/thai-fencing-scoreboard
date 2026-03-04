@@ -6,13 +6,13 @@ import { ImCross } from "react-icons/im";
 // Game Constants
 export const GAME_CONFIG = {
   WINNING_SCORE: 5,
-  INITIAL_TIME: 70, // 3 minutes in seconds
-  EXTENSION_TIME: 10, // 1 minute in seconds
+  INITIAL_TIME: 180, // 3 minutes in seconds
+  EXTENSION_TIME: 60, // 1 minute in seconds
   WARNING_THRESHOLD: 2, // 2 warnings of same type = opponent point
   AUDIO_ALERT_TIME: 60, // Alert at 1 minute remaining
   // Speed mode specific timings
-  SPEED_MAIN_TIME: 10, // 1 minute in seconds
-  SPEED_BREAK_TIME: 5 // 30 seconds in seconds
+  SPEED_MAIN_TIME: 60, // 1 minute in seconds
+  SPEED_BREAK_TIME: 30 // 30 seconds in seconds
 };
 
 // Warning Types
